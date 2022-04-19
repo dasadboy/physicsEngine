@@ -1,3 +1,5 @@
+#pragma once
+
 namespace ALGOS
 {
     // Fast Inverse Square root (return 1/sqrt(x))
