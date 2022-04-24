@@ -1,6 +1,6 @@
 #pragma once
 
-#include "algos.h"
+#include "math/algos.h"
 
 namespace physics {
 
@@ -29,12 +29,12 @@ struct vector3
     m_z(z)
     {}
 
-    vector3<T> operator+(vector3<T>& right)
+    inline vector3<T> operator+(vector3<T>& right)
     {
         return {m_x + right.m_x, m_y + right.m_y, m_z + right.m_z};
     }
 
-    vector3<T>& operator+=(vector3<T>& right)
+    inline vector3<T>& operator+=(vector3<T>& right)
     {
         m_x += right.m_x;
         m_y += right.m_y;
@@ -42,12 +42,12 @@ struct vector3
         return *this;
     }
 
-    vector3<T> operator-(vector3<T>& right)
+    inline vector3<T> operator-(vector3<T>& right)
     {
         return {m_x - right.m_x, m_y - right.m_y, m_z - right.m_z};
     }
 
-    vector3<T>& operator-=(vector3<T>& right)
+    inline vector3<T>& operator-=(vector3<T>& right)
     {
         m_x -= right.m_x;
         m_y -= right.m_y;
@@ -55,42 +55,50 @@ struct vector3
         return *this;
     }
 
-    vector3<T> operator*(T right)
+    inline vector3<T> operator*(T right)
     {
         return {m_x * right, m_y * right, m_z * right};
     }
 
-    vector3<T> operator*(T right)
+    inline vector3<T>& operator*=(T right)
     {
         m_x *= right, m_y *= right, m_z *= right;
+        return *this;
     }
 
-    vector3<T> operator/(T right)
+    inline vector3<T> operator/(T right)
     {
         return {m_x / right, m_y / right, m_z / right};
     }
 
-    vector3<T> operator/(T right)
+    inline vector3<T>& operator/=(T right)
     {
         m_x /= right, m_y /= right, m_z /= right;
+        return *this;
     }
 
-    T dot(vector3<T> right)
+    inline T dot(vector3<T> right)
     {
         return m_x * right.m_x + m_y * right.m_y + m_z * right.m_z;
     }
 
-    vector3<T> cross(vector3<T> right)
+    inline vector3<T> cross(vector3<T> right)
     {
         return {m_y * right.m_z - m_z * right.m_y, m_x * right.m_z - m_z * right.m_x, m_x * right.m_y - m_y * right.m_x};
     }
 
-    void normalize()
+    inline vector3<T>& normalize()
     {
         T invsqrt = ALGOS::fastInvSqrt(m_x + m_y + m_z);
         m_x *= invsqrt;
         m_y *= invsqrt;
         m_z *= invsqrt;
+        return *this;
+    }
+
+    inline float magnitude()
+    {
+        return sqrt(dot(*this))
     }
 }; // class vector3
 
