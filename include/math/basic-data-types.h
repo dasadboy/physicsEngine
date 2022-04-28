@@ -29,12 +29,12 @@ struct vector3
     m_z(z)
     {}
 
-    inline vector3<T> operator+(vector3<T>& right)
+    inline vector3<T> operator+(const vector3<T>& right) const
     {
         return {m_x + right.m_x, m_y + right.m_y, m_z + right.m_z};
     }
 
-    inline vector3<T>& operator+=(vector3<T>& right)
+    inline vector3<T>& operator+=(const vector3<T>& right)
     {
         m_x += right.m_x;
         m_y += right.m_y;
@@ -42,12 +42,20 @@ struct vector3
         return *this;
     }
 
-    inline vector3<T> operator-(vector3<T>& right)
+    inline vector3f& operator-()
+    {
+        m_x *= -1;
+        m_y *= -1;
+        m_z *= -1;
+        return *this;
+    }
+
+    inline vector3<T> operator-(const vector3<T>& right) const
     {
         return {m_x - right.m_x, m_y - right.m_y, m_z - right.m_z};
     }
 
-    inline vector3<T>& operator-=(vector3<T>& right)
+    inline vector3<T>& operator-=(const vector3<T>& right)
     {
         m_x -= right.m_x;
         m_y -= right.m_y;
@@ -55,7 +63,7 @@ struct vector3
         return *this;
     }
 
-    inline vector3<T> operator*(T right)
+    inline vector3<T> operator*(T right) const
     {
         return {m_x * right, m_y * right, m_z * right};
     }
@@ -66,7 +74,7 @@ struct vector3
         return *this;
     }
 
-    inline vector3<T> operator/(T right)
+    inline vector3<T> operator/(T right) const
     {
         return {m_x / right, m_y / right, m_z / right};
     }
@@ -77,12 +85,12 @@ struct vector3
         return *this;
     }
 
-    inline T dot(vector3<T> right)
+    inline T dot(const vector3<T> right) const
     {
         return m_x * right.m_x + m_y * right.m_y + m_z * right.m_z;
     }
 
-    inline vector3<T> cross(vector3<T> right)
+    inline vector3<T> cross(vector3<T> right) const
     {
         return {m_y * right.m_z - m_z * right.m_y, m_x * right.m_z - m_z * right.m_x, m_x * right.m_y - m_y * right.m_x};
     }
@@ -96,9 +104,17 @@ struct vector3
         return *this;
     }
 
-    inline float magnitude()
+    inline vector3<T>& getNormal() const
     {
-        return sqrt(dot(*this))
+        T invsqrt = ALGOS::fastInvSqrt(m_x + m_y + m_z);
+        return {m_x *= invsqrt,
+                m_y *= invsqrt,
+                m_z *= invsqrt};
+    }
+
+    inline float getMagnitude() const
+    {
+        return sqrt(this->dot(*this));
     }
 }; // class vector3
 
@@ -106,13 +122,33 @@ using vector3f = vector3<float>;
 using vector3i = vector3<int>;
 
 // Stores data of possible collision
-struct Collision
+struct CollisionVector
 {
     vector3f pointA;
     vector3f pointB;
-    vector3f normal; // B - A normalized
-    float depth; // || B - A ||
-    bool collides;
+    vector3f normal; // directional vector from A to B
+    float depth; // distance of furthest points
+
+    CollisionVector() :
+    pointA(0),
+    pointB(0),
+    normal(0),
+    depth(0)
+    {}
+    
+    CollisionVector(vector3f& A, vector3f& B) :
+    pointA(A),
+    pointB(B),
+    normal((B - A).normalize()),
+    depth((B - A).getMagnitude())
+    {}
+
+    CollisionVector(vector3f& A, vector3f& B, vector3f& normal, float depth) :
+    pointA(A),
+    pointB(B),
+    normal(normal),
+    depth(depth)
+    {}
 };
 
 struct Transform
