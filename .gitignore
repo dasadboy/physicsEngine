@@ -2,5 +2,6 @@
 .vscode/*
 
 dependencies/*
-build/*
+bin/*
 Makefile
+*.make
