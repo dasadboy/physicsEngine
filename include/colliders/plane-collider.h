@@ -34,7 +34,42 @@ public:
         m_distance = -a.dot(m_normal);
     }
 
-    float getDistance(vector3f& point)
+    inline CollisionVector checkCollision(Transform* transform, ColliderBase* collider, Transform* colliderTransform)
+    {
+        return collider->checkCollision(transform, this, colliderTransform);
+    }
+
+    inline CollisionVector checkCollision(Transform* transform, SphereCollider* sphereCollider, Transform* sphereTransform)
+    {
+        return algos::PlaneVSphereCollisionCheck(transform, this, sphereTransform, sphereCollider);
+    }
+
+    inline CollisionVector checkCollision(Transform* transform, PlaneCollider* planeCollider, Transform* planeTransform)
+    {
+        return {};
+    }
+
+    inline CollisionVector checkCollision(Transform* transform, CapsuleCollider* capsuleCollider, Transform* capsuleTransform)
+    {
+        return algos::PlaneVCapsuleCollisionCheck(transform, this, capsuleTransform, capsuleCollider);
+    }
+
+    inline vector3f furthestPoint(const vector3f& dir)
+    {
+        return {0};
+    }
+
+    vector3f getNormal() const
+    {
+        return m_normal;
+    }
+
+    float getDistance() const
+    {
+        return m_distance;
+    }
+
+    float getDistanceFromPoint(const vector3f& point) const
     {
         return point.dot(m_normal) + m_distance;
     }
