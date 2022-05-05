@@ -41,6 +41,30 @@ namespace algos
         return { A, B, (B - A).normalize(), -dist };
     }
 
+    inline CollisionVector SphereVCapsuleCollisionCheck(
+        const Transform* sphereTransform,
+        const SphereCollider* sphereCollider,
+        const Transform* capsuleTransform,
+        const CapsuleCollider* capsuleCollider)
+    {
+        const vector3f& sphereCentre = sphereTransform->pos;
+        const vector3f& capsuleStart = capsuleTransform->pos;
+        const vector3f& capsuleVector = capsuleCollider->getVector();
+        
+        float t = ((sphereCentre - capsuleStart).dot(capsuleVector))/(capsuleVector.dot(capsuleVector));
+        t = std::max(0.f, std::min(t, 1.f));
+        
+        vector3f a = capsuleVector * t + capsuleStart,
+                 v = (sphereCentre - a).normalize();
+
+        float r1 = capsuleCollider->getRadius(), r2 = sphereCollider->getRadius();
+
+        vector3f A =  v * r1 + a;
+        vector3f B = -v * r2 + sphereCentre;
+
+        return { B, A, (A - B).normalize(), -(B - A).dot(v) };
+    }
+
     inline CollisionVector PlaneVSphereCollisionCheck(
         const Transform* planeTransform, 
         const PlaneCollider* planeCollider, 
@@ -55,6 +79,28 @@ namespace algos
         vector3f A = sphereCentre + planeNorm * sphereRad;
         vector3f B = sphereCentre + planeNorm * dist;
         return { B, A, (A - B).normalize(), -dist };
+    }
+
+    inline CollisionVector PlaneVCapsuleCollisionCheck(
+        const Transform* planeTransform,
+        const PlaneCollider* planeCollider,
+        const Transform* capsuleTransform,
+        const CapsuleCollider* capsuleCollider) 
+    {
+        vector3f capsuleStart = capsuleTransform->pos,
+                 capsuleEnd = capsuleTransform->pos + capsuleCollider->getVector();
+
+        float distPlaneToStart = planeCollider->getDistanceFromPoint(capsuleStart);
+        float distPlaneToEnd = planeCollider->getDistanceFromPoint(capsuleEnd);
+
+        vector3f planeNormal = planeCollider->getNormal();
+
+        vector3f closest = capsuleStart * (distPlaneToStart <= distPlaneToEnd) + capsuleEnd * (distPlaneToStart > distPlaneToEnd);
+
+        vector3f A = closest + -planeNormal * capsuleCollider->getRadius();
+        vector3f B = closest + -planeNormal * std::min(distPlaneToStart, distPlaneToEnd);
+
+        return { B, A, (A - B), (B - A).dot(planeNormal) };
     }
 
     inline CollisionVector CapsuleVCapsuleCollisionCheck(
@@ -103,30 +149,6 @@ namespace algos
         return { A, B, (B - A).normalize(), (B - A).dot(v) };
     }
 
-    inline CollisionVector SphereVCapsuleCollisionCheck(
-        const Transform* sphereTransform,
-        const SphereCollider* sphereCollider,
-        const Transform* capsuleTransform,
-        const CapsuleCollider* capsuleCollider)
-    {
-        const vector3f& sphereCentre = sphereTransform->pos;
-        const vector3f& capsuleStart = capsuleTransform->pos;
-        const vector3f& capsuleVector = capsuleCollider->getVector();
-        
-        float t = ((sphereCentre - capsuleStart).dot(capsuleVector))/(capsuleVector.dot(capsuleVector));
-        t = std::max(0.f, std::min(t, 1.f));
-        
-        vector3f a = capsuleVector * t + capsuleStart,
-                 v = (sphereCentre - a).normalize();
-
-        float r1 = capsuleCollider->getRadius(), r2 = sphereCollider->getRadius();
-
-        vector3f A =  v * r1 + a;
-        vector3f B = -v * r2 + sphereCentre;
-
-        return { B, A, (A - B).normalize(), -(B - A).dot(v) };
-    }
-
     inline CollisionVector CapsuleVPlaneCollisionCheck(
         const Transform* capsuleTransform,
         const CapsuleCollider* capsuleCollider,
@@ -147,28 +169,6 @@ namespace algos
         vector3f B = closest + -planeNormal * std::min(distPlaneToStart, distPlaneToEnd);
 
         return { A, B, (B - A), (B - A).dot(planeNormal) };
-    }
-
-    inline CollisionVector PlaneVCapsuleCollisionCheck(
-        const Transform* planeTransform,
-        const PlaneCollider* planeCollider,
-        const Transform* capsuleTransform,
-        const CapsuleCollider* capsuleCollider) 
-    {
-        vector3f capsuleStart = capsuleTransform->pos,
-                 capsuleEnd = capsuleTransform->pos + capsuleCollider->getVector();
-
-        float distPlaneToStart = planeCollider->getDistanceFromPoint(capsuleStart);
-        float distPlaneToEnd = planeCollider->getDistanceFromPoint(capsuleEnd);
-
-        vector3f planeNormal = planeCollider->getNormal();
-
-        vector3f closest = capsuleStart * (distPlaneToStart <= distPlaneToEnd) + capsuleEnd * (distPlaneToStart > distPlaneToEnd);
-
-        vector3f A = closest + -planeNormal * capsuleCollider->getRadius();
-        vector3f B = closest + -planeNormal * std::min(distPlaneToStart, distPlaneToEnd);
-
-        return { B, A, (A - B), (B - A).dot(planeNormal) };
     }
 
 } // namespace algos
