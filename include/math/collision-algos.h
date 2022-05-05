@@ -38,6 +38,30 @@ namespace algos
         Transform* transform2,
         CapsuleCollider* collider2);
 
+    CollisionVector CapsuleVSphereCollisionCheck(
+        const Transform* capsuleTransform,
+        const CapsuleCollider* capsuleCollider,
+        const Transform* sphereTransform,
+        const SphereCollider* sphereCollider);
+
+    CollisionVector SphereVCapsuleCollisionCheck(
+        const Transform* sphereTransform,
+        const SphereCollider* sphereCollider,
+        const Transform* capsuleTransform,
+        const CapsuleCollider* capsuleCollider);
+
+    CollisionVector CapsuleVPlaneCollisionCheck(
+        const Transform* capsuleTransform,
+        const CapsuleCollider* capsuleCollider,
+        const Transform* planeTransform,
+        const PlaneCollider* planeCollider);
+
+    CollisionVector PlaneVCapsuleCollisionCheck(
+        const Transform* planeTransform,
+        const PlaneCollider* planeCollider,
+        const Transform* capsuleTransform,
+        const CapsuleCollider* capsuleCollider);
+
 } // namespace algos
 
 } // namespace physics
