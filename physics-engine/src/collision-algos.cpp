@@ -37,8 +37,8 @@ namespace algos
         vector3f planeNorm = planeCollider->getNormal();
         float dist = planeCollider->getDistanceFromPoint(sphereCentre);
 
-        vector3f A = sphereCentre + planeNorm * sphereRad;
-        vector3f B = sphereCentre + planeNorm * dist;
+        vector3f A = sphereCentre + -planeNorm * sphereRad;
+        vector3f B = sphereCentre + -planeNorm * dist;
 
         vector3f dir = (B - A).normalize();
 

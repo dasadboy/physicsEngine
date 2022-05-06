@@ -1,7 +1,6 @@
 .vs/*
 .vscode/*
 
-dependencies/*
-bin/*
+*/bin/*
 Makefile
 *.make

@@ -6,10 +6,10 @@ project "physics-engine"
     location "./"
     kind "ConsoleApp"
     language "C++"
-    targetdir "bin/%{cfg.buildcfg}/%{prj.name}"
-    objdir "bin/%{cfg.buildcfg}/%{prj.name}/obj"
-    files { "./src/**.cpp", "./src/**.h" }
-    includedirs { "./include" }
+    targetdir "%{prj.name}/bin/%{cfg.buildcfg}/"
+    objdir "%{prj.name}/bin/%{cfg.buildcfg}/obj"
+    includedirs { "%{prj.name}/include" }
+    files { "%{prj.name}/src/**.cpp", "%{prj.name}/src/**.h" }
 
     filter "system:windows"
         cppdialect "C++20"
