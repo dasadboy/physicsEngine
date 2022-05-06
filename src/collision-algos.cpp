@@ -21,7 +21,9 @@ namespace algos
         vector3f A =  vector12 * rad1 + transform1->pos;
         vector3f B = -vector12 * rad2 + transform2->pos;
 
-        return { A, B, B - A, -(B - A).dot(vector12) };
+        vector3f dir = (B - A).normalize();
+
+        return { A, B, dir, -(B - A).dot(vector12) };
     }
 
     inline CollisionVector SphereVPlaneCollisionCheck(
@@ -38,7 +40,9 @@ namespace algos
         vector3f A = sphereCentre + planeNorm * sphereRad;
         vector3f B = sphereCentre + planeNorm * dist;
 
-        return { A, B, (B - A).normalize(), -dist };
+        vector3f dir = (B - A).normalize();
+
+        return { A, B, dir, -dist };
     }
 
     inline CollisionVector SphereVCapsuleCollisionCheck(
@@ -62,7 +66,9 @@ namespace algos
         vector3f A =  v * r1 + a;
         vector3f B = -v * r2 + sphereCentre;
 
-        return { B, A, (A - B).normalize(), -(B - A).dot(v) };
+        vector3f dir = (A - B).normalize();
+
+        return { B, A, dir, -(B - A).dot(v) };
     }
 
     inline CollisionVector PlaneVSphereCollisionCheck(
@@ -78,7 +84,10 @@ namespace algos
 
         vector3f A = sphereCentre + planeNorm * sphereRad;
         vector3f B = sphereCentre + planeNorm * dist;
-        return { B, A, (A - B).normalize(), -dist };
+
+        vector3f dir = (A - B).normalize();
+
+        return { B, A, dir, -dist };
     }
 
     inline CollisionVector PlaneVCapsuleCollisionCheck(
@@ -100,7 +109,9 @@ namespace algos
         vector3f A = closest + -planeNormal * capsuleCollider->getRadius();
         vector3f B = closest + -planeNormal * std::min(distPlaneToStart, distPlaneToEnd);
 
-        return { B, A, (A - B), (B - A).dot(planeNormal) };
+        vector3f dir = (A - B).normalize();
+
+        return { B, A, dir, (B - A).dot(planeNormal) };
     }
 
     inline CollisionVector CapsuleVCapsuleCollisionCheck(
@@ -123,7 +134,10 @@ namespace algos
         vector3f v = (b - a).normalize();
         vector3f A = a + v * collider1->getRadius(),
                  B = b - v * collider2->getRadius();
-        return { A, B, (B - A).normalize(), -(B - A).dot(v) };
+
+        vector3f dir = (B - A).normalize();
+
+        return { A, B, dir, -(B - A).dot(v) };
     }
 
     inline CollisionVector CapsuleVSphereCollisionCheck(
@@ -146,7 +160,9 @@ namespace algos
         vector3f A =  v * r1 + a,
                  B = -v * r2 + sphereCentre;
 
-        return { A, B, (B - A).normalize(), (B - A).dot(v) };
+        vector3f dir = (B - A).normalize();
+
+        return { A, B, dir, (B - A).dot(v) };
     }
 
     inline CollisionVector CapsuleVPlaneCollisionCheck(
@@ -168,7 +184,9 @@ namespace algos
         vector3f A = closest + -planeNormal * capsuleCollider->getRadius();
         vector3f B = closest + -planeNormal * std::min(distPlaneToStart, distPlaneToEnd);
 
-        return { A, B, (B - A), (B - A).dot(planeNormal) };
+        vector3f dir = (B - A).normalize();
+
+        return { A, B, dir, (B - A).dot(planeNormal) };
     }
 
 } // namespace algos

@@ -15,28 +15,28 @@ namespace algos
 {
 
     CollisionVector SphereVSphereCollisionCheck(
-        Transform* transform1, 
-        SphereCollider* collider1, 
-        Transform* transform2, 
-        SphereCollider* collider2);
+        const Transform* transform1, 
+        const SphereCollider* collider1, 
+        const Transform* transform2, 
+        const SphereCollider* collider2);
 
     CollisionVector SphereVPlaneCollisionCheck(
-        Transform* sphereTransform, 
-        SphereCollider* sphereCollider, 
-        Transform* planeTransform, 
-        PlaneCollider* planeCollider);
+        const Transform* sphereTransform, 
+        const SphereCollider* sphereCollider, 
+        const Transform* planeTransform, 
+        const PlaneCollider* planeCollider);
 
     CollisionVector PlaneVSphereCollisionCheck(
-        Transform* planeTransform, 
-        PlaneCollider* planeCollider, 
-        Transform* sphereTransform, 
-        SphereCollider* sphereCollider);
+        const Transform* planeTransform, 
+        const PlaneCollider* planeCollider, 
+        const Transform* sphereTransform, 
+        const SphereCollider* sphereCollider);
 
     CollisionVector CapsuleVCapsuleCollisionCheck(
-        Transform* transform1,
-        CapsuleCollider* collider1,
-        Transform* transform2,
-        CapsuleCollider* collider2);
+        const Transform* transform1,
+        const CapsuleCollider* collider1,
+        const Transform* transform2,
+        const CapsuleCollider* collider2);
 
     CollisionVector CapsuleVSphereCollisionCheck(
         const Transform* capsuleTransform,
