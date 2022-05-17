@@ -23,7 +23,9 @@ namespace physics
 
             vector3f dir = (B - A).normalize();
 
-            return { A, B, dir, -(B - A).dot(vector12) };
+            float depth = collider2->getRadius() + collider1->getRadius() - (transform2->pos - transform1->pos).getMagnitude();
+
+            return { A, B, dir, depth };
         }
 
         // sphere plane
@@ -61,7 +63,7 @@ namespace physics
             t = std::max(0.f, std::min(t, 1.f));
             
             vector3f a = capsuleVector * t + capsuleStart,
-                    v = (sphereCentre - a).normalize();
+                     v = (sphereCentre - a).normalize();
 
             float r1 = capsuleCollider->getRadius(), r2 = sphereCollider->getRadius();
 
@@ -70,7 +72,9 @@ namespace physics
 
             vector3f dir = (A - B).normalize();
 
-            return { B, A, dir, -(B - A).dot(v) };
+            float depth = capsuleCollider->getRadius() + sphereCollider->getRadius() - (sphereCentre - a).getMagnitude();
+
+            return { B, A, dir, depth };
         }
 
         // plane sphere
@@ -135,14 +139,16 @@ namespace physics
             float t = std::max(0.f, std::min(((p1 - p2).dot(n1))/(v2.dot(n1)), 1.f));
             // find points
             vector3f a = v1 * s + p1,
-                    b = v2 * t + p2;
+                     b = v2 * t + p2;
             vector3f v = (b - a).normalize();
             vector3f A = a + v * collider1->getRadius(),
-                    B = b - v * collider2->getRadius();
+                     B = b - v * collider2->getRadius();
 
             vector3f dir = (B - A).normalize();
 
-            return { A, B, dir, -(B - A).dot(v) };
+            float depth = collider1->getRadius() + collider2->getRadius() - (b - a).getMagnitude();
+
+            return { A, B, dir, depth };
         }
 
         // capsule sphere
@@ -164,11 +170,13 @@ namespace physics
             float r1 = capsuleCollider->getRadius(), r2 = sphereCollider->getRadius();
 
             vector3f A =  v * r1 + a,
-                    B = -v * r2 + sphereCentre;
+                     B = -v * r2 + sphereCentre;
 
             vector3f dir = (B - A).normalize();
 
-            return { A, B, dir, (B - A).dot(v) };
+            float depth = capsuleCollider->getRadius() + sphereCollider->getRadius() - (sphereCentre - a).getMagnitude();
+
+            return { A, B, dir, depth };
         }
 
         // capsule plane
