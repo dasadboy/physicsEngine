@@ -8,25 +8,31 @@ namespace physics
 class CapsuleCollider : ColliderBase
 {
 private:
-    // start point is {0, 0, 0}, end is m_vector;
-    vector3f m_vector;
+    // start point is {0, 0, 0}, end is m_halfVector;
+    vector3f m_halfVector;
     float m_radius;
 
 public:
     CapsuleCollider():
-    m_vector(1, 0, 0),
+    m_halfVector(1, 0, 0),
     m_radius(1)
     {}
 
-    CapsuleCollider(const vector3f& direction, float vectorMagnitude, float radius) :
-    m_vector(direction * vectorMagnitude),
+    CapsuleCollider(const vector3f& direction, float halfVectorMagnitude, float radius) :
+    m_halfVector(direction * halfVectorMagnitude),
     m_radius(radius)
     {}
 
     CapsuleCollider(const vector3f& vec, float radius) :
-    m_vector(vec),
+    m_halfVector(vec),
     m_radius(radius)
     {}
+
+    CapsuleCollider(const vector3f& a, const vector3f& b, float radius) :
+    m_halfVector((b - a)/2),
+    m_radius(radius)
+    {}
+
     
     inline vector3f furthestPoint(const vector3f& dir)
     {
@@ -35,7 +41,7 @@ public:
 
     inline const vector3f getVector() const
     {
-        return m_vector;
+        return m_halfVector;
     }
 
     inline const float getRadius() const
