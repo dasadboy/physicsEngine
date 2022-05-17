@@ -1,7 +1,7 @@
-#include "colliders/plane-collider.h"
-#include "colliders/sphere-collider.h"
+#include "collision/collision-manager.h"
 
 int main()
 {
+    physics::CapsuleCollider newSphere;
     return 0;
 }

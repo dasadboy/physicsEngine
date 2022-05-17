@@ -1,5 +1,5 @@
 #pragma once
 
-#include "vector3.h"
-#include "transform.h"
-#include "collision-vector.h"
+#include "math/vector3.h"
+#include "math/transform.h"
+#include "math/collision-vector.h"
