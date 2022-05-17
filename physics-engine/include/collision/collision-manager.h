@@ -18,6 +18,7 @@ namespace physics
             float rad1 = collider1->getRadius(), rad2 = collider2->getRadius();
             vector3f vector12 = (transform2->pos - transform1->pos).normalize();
 
+            // points on either surface closest to other shape
             vector3f A =  vector12 * rad1 + transform1->pos;
             vector3f B = -vector12 * rad2 + transform2->pos;
 
@@ -40,6 +41,7 @@ namespace physics
             vector3f planeNorm = planeCollider->getNormal();
             float dist = planeCollider->getDistanceFromPoint(sphereCentre);
 
+            // points on either surface closest to other shape
             vector3f A = sphereCentre + -planeNorm * sphereRad;
             vector3f B = sphereCentre + -planeNorm * dist;
 
@@ -67,6 +69,7 @@ namespace physics
 
             float r1 = capsuleCollider->getRadius(), r2 = sphereCollider->getRadius();
 
+            // points on either surface closest to other shape
             vector3f A =  v * r1 + a;
             vector3f B = -v * r2 + sphereCentre;
 
@@ -89,6 +92,7 @@ namespace physics
             const vector3f& planeNorm = planeCollider->getNormal();
             float dist = planeCollider->getDistanceFromPoint(sphereCentre);
 
+            // points on either surface closest to other shape
             vector3f A = sphereCentre + planeNorm * sphereRad;
             vector3f B = sphereCentre + planeNorm * dist;
 
@@ -114,6 +118,7 @@ namespace physics
 
             vector3f closest = capsuleStart * (distPlaneToStart <= distPlaneToEnd) + capsuleEnd * (distPlaneToStart > distPlaneToEnd);
 
+            // points on either surface closest to other shape
             vector3f A = closest + -planeNormal * capsuleCollider->getRadius();
             vector3f B = closest + -planeNormal * std::min(distPlaneToStart, distPlaneToEnd);
 
@@ -141,6 +146,8 @@ namespace physics
             vector3f a = v1 * s + p1,
                      b = v2 * t + p2;
             vector3f v = (b - a).normalize();
+
+            // points on either surface closest to other shape
             vector3f A = a + v * collider1->getRadius(),
                      B = b - v * collider2->getRadius();
 
@@ -169,6 +176,7 @@ namespace physics
                     v = (sphereCentre - a).normalize();
             float r1 = capsuleCollider->getRadius(), r2 = sphereCollider->getRadius();
 
+            // points on either surface closest to other shape
             vector3f A =  v * r1 + a,
                      B = -v * r2 + sphereCentre;
 
@@ -194,8 +202,10 @@ namespace physics
 
             vector3f planeNormal = planeCollider->getNormal();
 
+            // closest point on capsule to plane
             vector3f closest = capsuleStart * (distPlaneToStart <= distPlaneToEnd) + capsuleEnd * (distPlaneToStart > distPlaneToEnd);
 
+            // points on either surface closest to other shape
             vector3f A = closest + -planeNormal * capsuleCollider->getRadius();
             vector3f B = closest + -planeNormal * std::min(distPlaneToStart, distPlaneToEnd);
 
