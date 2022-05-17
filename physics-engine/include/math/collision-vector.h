@@ -1,9 +1,10 @@
 #pragma once
 
-#include "vector3.h"
+#include "math/vector3.h"
 
 namespace physics
 {
+    
 // Stores data of possible collision
 struct CollisionVector
 {

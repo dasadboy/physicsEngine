@@ -1,6 +1,6 @@
 #pragma once
 
-#include "colliders/collider-base.h"
+#include "collision/collider-base.h"
 
 namespace physics {
 
@@ -32,26 +32,6 @@ public:
     {
         m_normal = (b - a).cross(c - a);
         m_distance = -a.dot(m_normal);
-    }
-
-    inline CollisionVector checkCollision(Transform* transform, ColliderBase* collider, Transform* colliderTransform)
-    {
-        return collider->checkCollision(transform, this, colliderTransform);
-    }
-
-    inline CollisionVector checkCollision(Transform* transform, SphereCollider* sphereCollider, Transform* sphereTransform)
-    {
-        return algos::PlaneVSphereCollisionCheck(transform, this, sphereTransform, sphereCollider);
-    }
-
-    inline CollisionVector checkCollision(Transform* transform, PlaneCollider* planeCollider, Transform* planeTransform)
-    {
-        return {};
-    }
-
-    inline CollisionVector checkCollision(Transform* transform, CapsuleCollider* capsuleCollider, Transform* capsuleTransform)
-    {
-        return algos::PlaneVCapsuleCollisionCheck(transform, this, capsuleTransform, capsuleCollider);
     }
 
     inline vector3f furthestPoint(const vector3f& dir)
