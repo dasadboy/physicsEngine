@@ -1,6 +1,7 @@
 #pragma once
 
-#include "math/vector3.h"
+#include "common/vector3.h"
+#include "common/quaternion.h"
 
 namespace physics
 {
@@ -8,7 +9,7 @@ namespace physics
     struct Transform
     {
         vector3f pos;
-        float rotation;
+        Quaternion rotation;
     };
     
 }

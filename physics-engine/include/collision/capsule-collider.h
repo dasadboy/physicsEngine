@@ -8,13 +8,15 @@ namespace physics
 class CapsuleCollider : ColliderBase
 {
 private:
-    // start point is {0, 0, 0}, end is m_halfVector;
+    // capsule where line is defined from m_position - m_halfVector to m_position + m_halfVector relative to transform
     vector3f m_halfVector;
+    vector3f m_position;
     float m_radius;
 
 public:
     CapsuleCollider():
-    m_halfVector(1, 0, 0),
+    m_halfVector(),
+    m_position(),
     m_radius(1)
     {}
 
@@ -39,7 +41,7 @@ public:
         return {0};
     }
 
-    inline const vector3f getVector() const
+    inline const vector3f& getVector() const
     {
         return m_halfVector;
     }
@@ -49,7 +51,10 @@ public:
         return m_radius;
     }
 
-    
+    inline const vector3f& getPosition() const
+    {
+        return m_position;
+    }
 
 };
 

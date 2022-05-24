@@ -1,10 +1,14 @@
 #pragma once
 
-#include "math/algos.h"
+#include "common/math-defines.h"
 
 namespace physics {
 
-template < class T >
+template <typename T>
+concept arithmeticType = std::integral<T> or std::floating_point<T>;
+
+template < typename T >
+  requires arithmeticType<T> // enforces numerical type
 struct vector3
 {
     T m_x;
@@ -22,7 +26,7 @@ struct vector3
     m_y(n),
     m_z(n)
     {}
-
+    
     vector3(T x, T y, T z) :
     m_x(x),
     m_y(y),
@@ -97,7 +101,7 @@ struct vector3
 
     inline vector3<T>& normalize()
     {
-        T invsqrt = algos::fastInvSqrt(m_x + m_y + m_z);
+        T invsqrt = 1/getMagnitude();
         m_x *= invsqrt;
         m_y *= invsqrt;
         m_z *= invsqrt;
@@ -106,15 +110,15 @@ struct vector3
 
     inline vector3<T> getNormal() const
     {
-        T invsqrt = algos::fastInvSqrt(m_x * m_x + m_y * m_y + m_z * m_z);
-        return {m_x * invsqrt,
-                m_y * invsqrt,
-                m_z * invsqrt};
+        T sqrt = std::sqrt(dot(*this));
+        return {m_x / sqrt,
+                m_y / sqrt,
+                m_z / sqrt};
     }
 
     inline float getMagnitude() const
     {
-        return sqrt(this->dot(*this));
+        return std::sqrt(dot(*this));
     }
 }; // class vector3
 

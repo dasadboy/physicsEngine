@@ -15,8 +15,10 @@ namespace physics
             const Transform* transform2, 
             const SphereCollider* collider2)
         {
+            vector3f circle1pos = transform1->pos + collider1->getPosition(),
+                     circle2pos = transform2->pos + collider2->getPosition();
             float rad1 = collider1->getRadius(), rad2 = collider2->getRadius();
-            vector3f vector12 = (transform2->pos - transform1->pos).normalize();
+            vector3f vector12 = (circle2pos - circle1pos).normalize();
 
             // points on either surface closest to other shape
             vector3f A =  vector12 * rad1 + transform1->pos;

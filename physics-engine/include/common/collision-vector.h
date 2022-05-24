@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/vector3.h"
+#include "common/vector3.h"
 
 namespace physics
 {

@@ -30,7 +30,7 @@ public:
 
     PlaneCollider(vector3f& a, vector3f& b, vector3f& c)
     {
-        m_normal = (b - a).cross(c - a);
+        m_normal = (b - a).cross(c - a).normalize();
         m_distance = -a.dot(m_normal);
     }
 
@@ -39,7 +39,7 @@ public:
         return {0};
     }
 
-    vector3f getNormal() const
+    inline const vector3f& getNormal() const
     {
         return m_normal;
     }
