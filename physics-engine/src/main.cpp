@@ -3,5 +3,6 @@
 
 int main()
 {
+    physics::CapsuleCollider cap;
     return 0;
 }

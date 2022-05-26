@@ -18,12 +18,12 @@ namespace physics
         m_v(v)
         {}
 
-        inline bool isUnitary()
+        inline bool isUnitary() const
         {
             return abs(1 - m_w * m_w + m_v.dot(m_v)) < MIN_ALLOWANCE;
         }
 
-        Quaternion operator+(const Quaternion& right)
+        Quaternion operator+(const Quaternion& right) const
         {
             return {
                 m_w + right.m_w,
@@ -38,7 +38,7 @@ namespace physics
             return *this;
         }
 
-        Quaternion operator-(const Quaternion& right)
+        Quaternion operator-(const Quaternion& right) const
         {
             return {
                 m_w - right.m_w,
@@ -53,7 +53,7 @@ namespace physics
             return *this;
         }
 
-        Quaternion operator*(const Quaternion& right)
+        Quaternion operator*(const Quaternion& right) const
         {
             return {
                 m_w * right.m_w - m_v.dot(right.m_v),
@@ -61,7 +61,7 @@ namespace physics
             };
         }
 
-        Quaternion operator*(const float right)
+        Quaternion operator*(const float right) const
         {
             return {
                 m_w * right,
@@ -76,7 +76,7 @@ namespace physics
             return *this;
         }
 
-        Quaternion operator/(const float right)
+        Quaternion operator/(const float right) const
         {
             return {
                 m_w / right,
@@ -91,16 +91,16 @@ namespace physics
             return *this;
         }
 
-        float dot(const Quaternion& q)
+        float dot(const Quaternion& q) const
         {
             return m_v.dot(q.m_v) + m_w * q.m_w;
         }   
 
-        vector3f rotate(const vector3f& v)
+        vector3f rotate(const vector3f& v) const
         {
-            assert(!isUnitary());
+            m_assert(isUnitary(), "Quaternion is not unitary.");
             return m_v * (m_w * m_w - m_v.dot(m_v)) + m_v * 2 * (m_v.dot(v)) + m_v.cross(v) * m_w * 2;
         }
-    };
+    }; // class Quaternion
 
-}
+} // namespace physics

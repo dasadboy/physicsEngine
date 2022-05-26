@@ -39,6 +39,10 @@ public:
         return {0};
     }
 
+    virtual inline const vector3f& getRelativePosition() const {}
+
+    virtual inline vector3f getAbsolutePosition(const Transform& t) const {}
+
     inline const vector3f& getNormal() const
     {
         return m_normal;
@@ -53,6 +57,6 @@ public:
     {
         return point.dot(m_normal) + m_distance;
     }
-};
+}; // class PlaneCollider
 
-}
+} // namespace physics

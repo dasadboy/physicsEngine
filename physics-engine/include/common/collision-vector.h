@@ -38,6 +38,6 @@ struct CollisionVector
     {
         return depth > 0;
     }
-};
+}; // struct CollisionVector
 
-}
+} // namespace physics

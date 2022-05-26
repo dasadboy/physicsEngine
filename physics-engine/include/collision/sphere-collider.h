@@ -30,15 +30,15 @@ public:
         return {0};
     }
 
+    virtual inline const vector3f& getRelativePosition() const {}
+
+    virtual inline vector3f getAbsolutePosition(const Transform& t) const {}
+
     inline float getRadius() const
     {
         return m_radius;
     }
 
-    inline const vector3f& getPosition() const
-    {
-        return m_position;
-    }
-};
+}; // class SphereCollider
 
 } // physics

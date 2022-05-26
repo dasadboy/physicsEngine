@@ -15,8 +15,8 @@ namespace physics
             const Transform* transform2, 
             const SphereCollider* collider2)
         {
-            vector3f circle1pos = transform1->pos + collider1->getPosition(),
-                     circle2pos = transform2->pos + collider2->getPosition();
+            vector3f circle1pos = collider1->getAbsolutePosition(*transform1),
+                     circle2pos = collider2->getAbsolutePosition(*transform2);
             float rad1 = collider1->getRadius(), rad2 = collider2->getRadius();
             vector3f vector12 = (circle2pos - circle1pos).normalize();
 

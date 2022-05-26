@@ -14,23 +14,26 @@ private:
     float m_radius;
 
 public:
-    CapsuleCollider():
+    CapsuleCollider(const vector3f& position = {0, 0, 0}) :
+    ColliderBase(position),
     m_halfVector(),
-    m_position(),
     m_radius(1)
     {}
 
-    CapsuleCollider(const vector3f& direction, float halfVectorMagnitude, float radius) :
+    CapsuleCollider(const vector3f& direction, float halfVectorMagnitude, float radius, const vector3f& position = {0, 0, 0}) :
+    ColliderBase(position),
     m_halfVector(direction * halfVectorMagnitude),
     m_radius(radius)
     {}
 
-    CapsuleCollider(const vector3f& vec, float radius) :
+    CapsuleCollider(const vector3f& vec, float radius, const vector3f& position = {0, 0, 0}) :
+    ColliderBase(position),
     m_halfVector(vec),
     m_radius(radius)
     {}
 
-    CapsuleCollider(const vector3f& a, const vector3f& b, float radius) :
+    CapsuleCollider(const vector3f& a, const vector3f& b, float radius, const vector3f& position = {0, 0, 0}) :
+    ColliderBase(position),
     m_halfVector((b - a)/2),
     m_radius(radius)
     {}
@@ -40,6 +43,10 @@ public:
     {
         return {0};
     }
+
+    virtual inline const vector3f& getRelativePosition() const {}
+
+    virtual inline vector3f getAbsolutePosition(const Transform& t) const {}
 
     inline const vector3f& getVector() const
     {
@@ -51,11 +58,6 @@ public:
         return m_radius;
     }
 
-    inline const vector3f& getPosition() const
-    {
-        return m_position;
-    }
+}; // class CapsuleCollider
 
-};
-
-}
+} // namespace physics
