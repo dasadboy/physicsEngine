@@ -66,8 +66,6 @@ public:
         return point.dot(m_normal) + m_distance;
     }
 
-
-
 }; // class PlaneCollider
 
 } // namespace physics
