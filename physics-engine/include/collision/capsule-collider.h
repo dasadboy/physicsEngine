@@ -5,7 +5,7 @@
 namespace physics
 {
 
-class CapsuleCollider : ColliderBase
+class CapsuleCollider : Collider
 {
 private:
     // capsule where line is defined from m_position - m_halfVector to m_position + m_halfVector relative to transform
@@ -15,25 +15,25 @@ private:
 
 public:
     CapsuleCollider(const vector3f& position = {0, 0, 0}) :
-    ColliderBase(position),
+    Collider(ColliderType::CAPSULE, position),
     m_halfVector(),
     m_radius(1)
     {}
 
     CapsuleCollider(const vector3f& direction, float halfVectorMagnitude, float radius, const vector3f& position = {0, 0, 0}) :
-    ColliderBase(position),
+    Collider(ColliderType::CAPSULE, position),
     m_halfVector(direction * halfVectorMagnitude),
     m_radius(radius)
     {}
 
     CapsuleCollider(const vector3f& vec, float radius, const vector3f& position = {0, 0, 0}) :
-    ColliderBase(position),
+    Collider(ColliderType::CAPSULE, position),
     m_halfVector(vec),
     m_radius(radius)
     {}
 
     CapsuleCollider(const vector3f& a, const vector3f& b, float radius, const vector3f& position = {0, 0, 0}) :
-    ColliderBase(position),
+    Collider(ColliderType::CAPSULE, position),
     m_halfVector((b - a)/2),
     m_radius(radius)
     {}

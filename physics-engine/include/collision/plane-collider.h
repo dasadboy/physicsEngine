@@ -4,31 +4,33 @@
 
 namespace physics {
 
-class PlaneCollider : ColliderBase
+class PlaneCollider : Collider
 {
 private:
     vector3f m_normal;
     float m_distance;
 
 public:
-    PlaneCollider();
-
     PlaneCollider(float normalx, float normaly, float normalz, float distance) :
+    Collider(ColliderType::PLANE),
     m_normal(normalx, normaly, normalz),
     m_distance(distance)
     {}
 
     PlaneCollider(vector3f& normal, float distance) :
+    Collider(ColliderType::PLANE),
     m_normal(normal),
     m_distance(distance)
     {}
 
     PlaneCollider(vector3f& normal, vector3f& point) :
+    Collider(ColliderType::PLANE),
     m_normal(normal),
     m_distance(-point.dot(normal))
     {}
 
-    PlaneCollider(vector3f& a, vector3f& b, vector3f& c)
+    PlaneCollider(vector3f& a, vector3f& b, vector3f& c) :
+    Collider(ColliderType::PLANE)
     {
         m_normal = (b - a).cross(c - a).normalize();
         m_distance = -a.dot(m_normal);

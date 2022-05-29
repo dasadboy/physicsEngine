@@ -4,24 +4,15 @@
 
 namespace physics
 {
-class SphereCollider : ColliderBase
+class SphereCollider : Collider
 {
 private:
     vector3f m_position;
     float m_radius;
 
 public:
-    SphereCollider() :
-    m_position(),
-    m_radius(1)
-    {}
-
-    SphereCollider(float radius) :
-    m_radius(radius)
-    {}
-
-    SphereCollider(const vector3f& pos, float radius) :
-    m_position(pos),
+    SphereCollider(float radius = 1, const vector3f& position = {0, 0, 0}) :
+    Collider(ColliderType::SPHERE, position),
     m_radius(radius)
     {}
 

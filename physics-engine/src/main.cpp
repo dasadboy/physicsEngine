@@ -1,4 +1,4 @@
-#include "collision/collision-manager.h"
+#include "world/objects.h"
 #include <iostream>
 
 int main()
