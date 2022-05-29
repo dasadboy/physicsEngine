@@ -39,7 +39,7 @@ namespace physics
             const PlaneCollider* planeCollider)
         {
             float sphereRad = sphereCollider->getRadius();
-            vector3f sphereCentre = sphereTransform->pos;
+            vector3f sphereCentre = sphereCollider->getAbsolutePosition(*sphereTransform);
             vector3f planeNorm = planeCollider->getNormal();
             float dist = planeCollider->getDistanceFromPoint(sphereCentre);
 
@@ -59,14 +59,14 @@ namespace physics
             const Transform* capsuleTransform,
             const CapsuleCollider* capsuleCollider)
         {
-            const vector3f& sphereCentre = sphereTransform->pos;
-            const vector3f& capsuleStart = capsuleTransform->pos;
-            const vector3f& capsuleVector = capsuleCollider->getVector();
+            const vector3f sphereCentre = sphereCollider->getAbsolutePosition(*sphereTransform);
+            const vector3f capsuleCentre = capsuleCollider->getAbsolutePosition(*capsuleTransform);
+            const vector3f capsuleVector = capsuleTransform->rotation.rotate(capsuleCollider->getVector());
             
-            float t = ((sphereCentre - capsuleStart).dot(capsuleVector))/(capsuleVector.dot(capsuleVector));
-            t = std::max(0.f, std::min(t, 1.f));
+            float t = ((sphereCentre - capsuleCentre).dot(capsuleVector))/(capsuleVector.dot(capsuleVector));
+            t = std::max(-1.f, std::min(t, 1.f));
             
-            vector3f a = capsuleVector * t + capsuleStart,
+            vector3f a = capsuleVector * t + capsuleCentre,
                      v = (sphereCentre - a).normalize();
 
             float r1 = capsuleCollider->getRadius(), r2 = sphereCollider->getRadius();
@@ -90,7 +90,7 @@ namespace physics
             const SphereCollider* sphereCollider)
         {
             float sphereRad = sphereCollider->getRadius();
-            const vector3f& sphereCentre = sphereTransform->pos;
+            const vector3f& sphereCentre = sphereCollider->getAbsolutePosition(*sphereTransform);
             const vector3f& planeNorm = planeCollider->getNormal();
             float dist = planeCollider->getDistanceFromPoint(sphereCentre);
 
@@ -110,8 +110,10 @@ namespace physics
             const Transform* capsuleTransform,
             const CapsuleCollider* capsuleCollider) 
         {
-            vector3f capsuleStart = capsuleTransform->pos,
-                    capsuleEnd = capsuleTransform->pos + capsuleCollider->getVector();
+            vector3f capsuleVector = capsuleTransform->rotation.rotate(capsuleCollider->getVector()),
+                     capsuleCentre = capsuleCollider->getAbsolutePosition(*capsuleTransform),
+                     capsuleStart = capsuleCentre - capsuleVector,
+                     capsuleEnd = capsuleCentre + capsuleVector;
 
             float distPlaneToStart = planeCollider->getDistanceFromPoint(capsuleStart);
             float distPlaneToEnd = planeCollider->getDistanceFromPoint(capsuleEnd);
@@ -137,13 +139,13 @@ namespace physics
             const CapsuleCollider* collider2)
         {
             // adapting https://en.wikipedia.org/wiki/Skew_lines#Nearest_points
-            const vector3f& v1 = collider1->getVector(), v2 = collider2->getVector();
+            const vector3f& v1 = transform1->rotation.rotate(collider1->getVector()), v2 = transform2->rotation.rotate(collider2->getVector());
             vector3f n = v1.cross(v2);
             vector3f n1 = v1.cross(n), n2 = v2.cross(n);
-            vector3f p1 = transform1->pos, p2 = transform2->pos;
+            vector3f p1 = collider1->getAbsolutePosition(*transform1), p2 = collider1->getAbsolutePosition(*transform2);
             // s or t not between 0 and 1 are out of bounds points
-            float s = std::max(0.f, std::min(((p2 - p1).dot(n2))/(v1.dot(n2)), 1.f));
-            float t = std::max(0.f, std::min(((p1 - p2).dot(n1))/(v2.dot(n1)), 1.f));
+            float s = std::max(-1.f, std::min(((p2 - p1).dot(n2))/(v1.dot(n2)), 1.f));
+            float t = std::max(-1.f, std::min(((p1 - p2).dot(n1))/(v2.dot(n1)), 1.f));
             // find points
             vector3f a = v1 * s + p1,
                      b = v2 * t + p2;
@@ -167,15 +169,15 @@ namespace physics
             const Transform* sphereTransform,
             const SphereCollider* sphereCollider)
         {
-            const vector3f& sphereCentre = sphereTransform->pos;
-            const vector3f& capsuleStart = capsuleTransform->pos;
-            const vector3f& capsuleVector = capsuleCollider->getVector();
+            const vector3f sphereCentre = sphereCollider->getAbsolutePosition(*sphereTransform);
+            const vector3f capsuleCentre = capsuleCollider->getAbsolutePosition(*capsuleTransform);
+            const vector3f capsuleVector = capsuleTransform->rotation.rotate(capsuleCollider->getVector());
             
-            float t = ((sphereCentre - capsuleStart).dot(capsuleVector))/(capsuleVector.dot(capsuleVector));
-            t = std::max(0.f, std::min(t, 1.f));
+            float t = ((sphereCentre - capsuleCentre).dot(capsuleVector))/(capsuleVector.dot(capsuleVector));
+            t = std::max(-1.f, std::min(t, 1.f));
             
-            vector3f a = capsuleVector * t + capsuleStart,
-                    v = (sphereCentre - a).normalize();
+            vector3f a = capsuleVector * t + capsuleCentre,
+                     v = (sphereCentre - a).normalize();
             float r1 = capsuleCollider->getRadius(), r2 = sphereCollider->getRadius();
 
             // points on either surface closest to other shape
@@ -196,8 +198,10 @@ namespace physics
             const Transform* planeTransform,
             const PlaneCollider* planeCollider) 
         {
-            vector3f capsuleStart = capsuleTransform->pos,
-                    capsuleEnd = capsuleTransform->pos + capsuleCollider->getVector();
+            vector3f capsuleVector = capsuleTransform->rotation.rotate(capsuleCollider->getVector()),
+                     capsuleCentre = capsuleCollider->getAbsolutePosition(*capsuleTransform),
+                     capsuleStart = capsuleCentre - capsuleVector,
+                     capsuleEnd = capsuleCentre + capsuleVector;
 
             float distPlaneToStart = planeCollider->getDistanceFromPoint(capsuleStart);
             float distPlaneToEnd = planeCollider->getDistanceFromPoint(capsuleEnd);
