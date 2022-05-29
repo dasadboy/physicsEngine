@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/vector3.h"
+#include "common/vector3.h"
 
 namespace physics
 {
@@ -38,6 +38,6 @@ struct CollisionVector
     {
         return depth > 0;
     }
-};
+}; // struct CollisionVector
 
-}
+} // namespace physics

@@ -8,34 +8,49 @@ namespace physics
 class CapsuleCollider : ColliderBase
 {
 private:
-    // start point is {0, 0, 0}, end is m_vector;
-    vector3f m_vector;
+    // capsule where line is defined from m_position - m_halfVector to m_position + m_halfVector relative to transform
+    vector3f m_halfVector;
+    vector3f m_position;
     float m_radius;
 
 public:
-    CapsuleCollider():
-    m_vector(1, 0, 0),
+    CapsuleCollider(const vector3f& position = {0, 0, 0}) :
+    ColliderBase(position),
+    m_halfVector(),
     m_radius(1)
     {}
 
-    CapsuleCollider(const vector3f& direction, float vectorMagnitude, float radius) :
-    m_vector(direction * vectorMagnitude),
+    CapsuleCollider(const vector3f& direction, float halfVectorMagnitude, float radius, const vector3f& position = {0, 0, 0}) :
+    ColliderBase(position),
+    m_halfVector(direction * halfVectorMagnitude),
     m_radius(radius)
     {}
 
-    CapsuleCollider(const vector3f& vec, float radius) :
-    m_vector(vec),
+    CapsuleCollider(const vector3f& vec, float radius, const vector3f& position = {0, 0, 0}) :
+    ColliderBase(position),
+    m_halfVector(vec),
     m_radius(radius)
     {}
+
+    CapsuleCollider(const vector3f& a, const vector3f& b, float radius, const vector3f& position = {0, 0, 0}) :
+    ColliderBase(position),
+    m_halfVector((b - a)/2),
+    m_radius(radius)
+    {}
+
     
     inline vector3f furthestPoint(const vector3f& dir)
     {
         return {0};
     }
 
-    inline const vector3f getVector() const
+    virtual inline const vector3f& getRelativePosition() const {}
+
+    virtual inline vector3f getAbsolutePosition(const Transform& t) const {}
+
+    inline const vector3f& getVector() const
     {
-        return m_vector;
+        return m_halfVector;
     }
 
     inline const float getRadius() const
@@ -43,8 +58,6 @@ public:
         return m_radius;
     }
 
-    
+}; // class CapsuleCollider
 
-};
-
-}
+} // namespace physics

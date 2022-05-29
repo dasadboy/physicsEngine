@@ -30,7 +30,7 @@ public:
 
     PlaneCollider(vector3f& a, vector3f& b, vector3f& c)
     {
-        m_normal = (b - a).cross(c - a);
+        m_normal = (b - a).cross(c - a).normalize();
         m_distance = -a.dot(m_normal);
     }
 
@@ -39,7 +39,19 @@ public:
         return {0};
     }
 
-    vector3f getNormal() const
+    virtual inline const vector3f& getRelativePosition() const override
+    {
+        m_assert(true, "PlaneCollider has no relative position. Position is defined by distance and \
+        vector normal to plane");
+    } 
+
+    virtual inline vector3f getAbsolutePosition(const Transform& t) const override
+    {
+        m_assert(true, "PlaneCollider has no absolute position. Position is defined by distance and \
+        vector normal to plane");
+    }
+
+    inline const vector3f& getNormal() const
     {
         return m_normal;
     }
@@ -53,6 +65,7 @@ public:
     {
         return point.dot(m_normal) + m_distance;
     }
-};
 
-}
+}; // class PlaneCollider
+
+} // namespace physics
