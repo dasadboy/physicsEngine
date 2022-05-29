@@ -13,7 +13,7 @@ namespace physics
         float m_w;
         vector3f m_v;
 
-        Quaternion(float w, const vector3f& v) :
+        Quaternion(float w = 1, const vector3f& v = {0}) :
         m_w(w),
         m_v(v)
         {}

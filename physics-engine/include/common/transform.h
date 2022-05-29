@@ -11,6 +11,21 @@ namespace physics
         vector3f pos;
         Quaternion rotation;
 
+        Transform(const vector3f& pos = {1}, const Quaternion& rotation = {1}) :
+        pos(pos),
+        rotation(rotation)
+        {}
+
+        void move(const vector3f& d)
+        {
+            pos += d;
+        }
+
+        void rotateSelf(const Quaternion& q)
+        {
+            rotation = q * rotation;
+        }
+
         vector3f rotate(const vector3f& v) const
         {
             m_assert(rotation.isUnitary(), "Quaternion is not unitary.");

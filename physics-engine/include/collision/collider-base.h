@@ -22,7 +22,7 @@ public:
     m_position(position)
     {}
 
-    inline ColliderType getType() const { return m_type; }
+    inline size_t getType() const { return (unsigned int) m_type; }
 
     virtual inline vector3f furthestPoint(const vector3f& dir) = 0;
 
