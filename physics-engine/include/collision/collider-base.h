@@ -19,7 +19,7 @@ public:
 
     virtual inline vector3f getAbsolutePosition(const Transform& t) const
     {
-        return t.rotation.rotate( m_position ) + t.pos;
+        return t.rotate( m_position ) + t.pos;
     }
 }; // class ColliderBase
 

@@ -8,10 +8,10 @@ namespace physics
 
     class Quaternion
     {
+    public:
+        
         float m_w;
         vector3f m_v;
-        
-    public:
 
         Quaternion(float w, const vector3f& v) :
         m_w(w),
@@ -95,12 +95,6 @@ namespace physics
         {
             return m_v.dot(q.m_v) + m_w * q.m_w;
         }   
-
-        vector3f rotate(const vector3f& v) const
-        {
-            m_assert(isUnitary(), "Quaternion is not unitary.");
-            return m_v * (m_w * m_w - m_v.dot(m_v)) + m_v * 2 * (m_v.dot(v)) + m_v.cross(v) * m_w * 2;
-        }
     }; // class Quaternion
 
 } // namespace physics
