@@ -23,7 +23,7 @@ namespace physics
             return abs(1 - m_w * m_w + m_v.dot(m_v)) < MIN_ALLOWANCE;
         }
 
-        Quaternion operator+(const Quaternion& right) const
+        inline Quaternion operator+(const Quaternion& right) const
         {
             return {
                 m_w + right.m_w,
@@ -31,14 +31,14 @@ namespace physics
             };
         }
 
-        Quaternion& operator+=(const Quaternion& right)
+        inline Quaternion& operator+=(const Quaternion& right)
         {
             m_w += right.m_w;
             m_v += right.m_v;
             return *this;
         }
 
-        Quaternion operator-(const Quaternion& right) const
+        inline Quaternion operator-(const Quaternion& right) const
         {
             return {
                 m_w - right.m_w,
@@ -46,14 +46,14 @@ namespace physics
             };
         }
 
-        Quaternion& operator-=(const Quaternion& right)
+        inline Quaternion& operator-=(const Quaternion& right)
         {
             m_w -= right.m_w;
             m_v -= right.m_v;
             return *this;
         }
 
-        Quaternion operator*(const Quaternion& right) const
+        inline Quaternion operator*(const Quaternion& right) const
         {
             return {
                 m_w * right.m_w - m_v.dot(right.m_v),
@@ -61,7 +61,7 @@ namespace physics
             };
         }
 
-        Quaternion operator*(const float right) const
+        inline Quaternion operator*(const float right) const
         {
             return {
                 m_w * right,
@@ -69,14 +69,14 @@ namespace physics
             };
         }
 
-        Quaternion operator*=(const float right)
+        inline Quaternion operator*=(const float right)
         {
             m_w *= right;
             m_v *= right;
             return *this;
         }
 
-        Quaternion operator/(const float right) const
+        inline Quaternion operator/(const float right) const
         {
             return {
                 m_w / right,
@@ -84,14 +84,14 @@ namespace physics
             };
         }
 
-        Quaternion operator/=(const float right)
+        inline Quaternion operator/=(const float right)
         {
             m_w /= right;
             m_v /= right;
             return *this;
         }
 
-        float dot(const Quaternion& q) const
+        inline float dot(const Quaternion& q) const
         {
             return m_v.dot(q.m_v) + m_w * q.m_w;
         }   
