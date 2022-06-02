@@ -1,6 +1,8 @@
 #pragma once
 
-#include "collision/collision-manager.h"
+#include "capsule-collider.h"
+#include "sphere-collider.h"
+#include "plane-collider.h"
 
 namespace physics
 {
