@@ -24,14 +24,14 @@ public:
 
     inline size_t getType() const { return (unsigned int) m_type; }
 
-    virtual inline vector3f furthestPoint(const vector3f& dir) = 0;
+    virtual inline const vector3f furthestPoint(const vector3f& dir) const = 0;
 
     virtual inline const vector3f& getRelativePosition() const
     {
         return m_position;
     }
 
-    virtual inline vector3f getAbsolutePosition(const Transform& t) const
+    virtual inline const vector3f getAbsolutePosition(const Transform& t) const
     {
         return t.rotate( m_position ) + t.pos;
     }

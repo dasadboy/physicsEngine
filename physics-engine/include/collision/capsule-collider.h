@@ -39,14 +39,11 @@ public:
     {}
 
     
-    inline vector3f furthestPoint(const vector3f& dir)
+    inline const vector3f furthestPoint(const vector3f& dir) const override
     {
+        m_assert(false, "not yet implemented");
         return {0};
     }
-
-    virtual inline const vector3f& getRelativePosition() const {}
-
-    virtual inline vector3f getAbsolutePosition(const Transform& t) const {}
 
     inline const vector3f& getVector() const
     {

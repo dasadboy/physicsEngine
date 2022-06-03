@@ -36,7 +36,7 @@ public:
         m_distance = -a.dot(m_normal);
     }
 
-    inline vector3f furthestPoint(const vector3f& dir)
+    inline const vector3f furthestPoint(const vector3f& dir) const override
     {
         return {0};
     }
@@ -45,12 +45,14 @@ public:
     {
         m_assert(true, "PlaneCollider has no relative position. Position is defined by distance and \
         vector normal to plane");
+        return {0};
     } 
 
-    virtual inline vector3f getAbsolutePosition(const Transform& t) const override
+    virtual inline const vector3f getAbsolutePosition(const Transform& t) const override
     {
         m_assert(true, "PlaneCollider has no absolute position. Position is defined by distance and \
         vector normal to plane");
+        return {0};
     }
 
     inline const vector3f& getNormal() const

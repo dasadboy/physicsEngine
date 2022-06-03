@@ -16,14 +16,14 @@ public:
     m_radius(radius)
     {}
 
-    inline vector3f furthestPoint(const vector3f& dir) override
+    inline const vector3f furthestPoint(const vector3f& dir) const override
     {
         return {0};
     }
 
     virtual inline const vector3f& getRelativePosition() const {}
 
-    virtual inline vector3f getAbsolutePosition(const Transform& t) const {}
+    virtual inline const vector3f getAbsolutePosition(const Transform& t) const {}
 
     inline float getRadius() const
     {
