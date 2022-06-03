@@ -18,12 +18,9 @@ public:
 
     inline const vector3f furthestPoint(const vector3f& dir) const override
     {
-        return {0};
+        m_assert(dir.getMagnitude() == 1, "dir is not normalized");
+        return m_position + dir * m_radius;
     }
-
-    virtual inline const vector3f& getRelativePosition() const {}
-
-    virtual inline const vector3f getAbsolutePosition(const Transform& t) const {}
 
     inline float getRadius() const
     {

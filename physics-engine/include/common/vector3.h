@@ -116,6 +116,11 @@ struct vector3
                 m_z / sqrt};
     }
 
+    inline float getMagnitudeSquared() const
+    {
+        return dot(*this);
+    }
+
     inline float getMagnitude() const
     {
         return std::sqrt(dot(*this));
