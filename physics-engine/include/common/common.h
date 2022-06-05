@@ -10,7 +10,7 @@
 #   define m_assert(Expr, Msg) \
     __M_Assert(#Expr, Expr, __FILE__, __LINE__, Msg)
 #else
-#   define M_Assert(Expr, Msg) ;
+#   define m_assert(Expr, Msg) ;
 #endif
 
 void __M_Assert(const char* expr_str, bool expr, const char* file, int line, const char* msg)

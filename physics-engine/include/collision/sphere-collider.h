@@ -4,35 +4,23 @@
 
 namespace physics
 {
-class SphereCollider : ColliderBase
+class SphereCollider : Collider
 {
 private:
     vector3f m_position;
     float m_radius;
 
 public:
-    SphereCollider() :
-    m_position(),
-    m_radius(1)
-    {}
-
-    SphereCollider(float radius) :
+    SphereCollider(float radius = 1, const vector3f& position = {0, 0, 0}) :
+    Collider(ColliderType::SPHERE, position),
     m_radius(radius)
     {}
 
-    SphereCollider(const vector3f& pos, float radius) :
-    m_position(pos),
-    m_radius(radius)
-    {}
-
-    inline vector3f furthestPoint(const vector3f& dir) override
+    inline const vector3f furthestPoint(const vector3f& dir) const override
     {
-        return {0};
+        m_assert(dir.getMagnitude() == 1, "dir is not normalized");
+        return m_position + dir * m_radius;
     }
-
-    virtual inline const vector3f& getRelativePosition() const {}
-
-    virtual inline vector3f getAbsolutePosition(const Transform& t) const {}
 
     inline float getRadius() const
     {

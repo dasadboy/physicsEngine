@@ -4,23 +4,37 @@
 
 namespace physics {
 
-class ColliderBase
+enum ColliderType
+{
+    SPHERE,
+    PLANE,
+    CAPSULE
+};
+
+class Collider
 {
     vector3f m_position;
-public:
-    ColliderBase(const vector3f& position = {0, 0, 0}) : m_position(position) {}
+    ColliderType m_type;
 
-    virtual inline vector3f furthestPoint(const vector3f& dir) = 0;
+public:
+    Collider(const ColliderType type, const vector3f& position = {0, 0, 0}) :
+    m_type(type),
+    m_position(position)
+    {}
+
+    inline size_t getType() const { return (unsigned int) m_type; }
+
+    virtual inline const vector3f furthestPoint(const vector3f& dir) const = 0;
 
     virtual inline const vector3f& getRelativePosition() const
     {
         return m_position;
     }
 
-    virtual inline vector3f getAbsolutePosition(const Transform& t) const
+    virtual inline const vector3f getAbsolutePosition(const Transform& t) const
     {
         return t.rotate( m_position ) + t.pos;
     }
-}; // class ColliderBase
+}; // class Collider
 
 } // namespace physics
