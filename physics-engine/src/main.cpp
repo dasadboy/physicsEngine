@@ -1,4 +1,4 @@
-#include "collision/collision-object.h"
+#include "collision/collision-manager.h"
 #include <iostream>
 
 int main()

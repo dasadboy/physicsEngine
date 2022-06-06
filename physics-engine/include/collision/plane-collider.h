@@ -4,7 +4,7 @@
 
 namespace physics {
 
-class PlaneCollider : Collider
+class PlaneCollider : public Collider
 {
 private:
     vector3f m_normal;
@@ -41,14 +41,14 @@ public:
         return {0};
     }
 
-    virtual inline const vector3f& getRelativePosition() const override
+    inline const vector3f& getRelativePosition() const
     {
         m_assert(true, "PlaneCollider has no relative position. Position is defined by distance and \
         vector normal to plane");
         return {0};
     } 
 
-    virtual inline const vector3f getAbsolutePosition(const Transform& t) const override
+    inline const vector3f getAbsolutePosition(const Transform& t) const
     {
         m_assert(true, "PlaneCollider has no absolute position. Position is defined by distance and \
         vector normal to plane");

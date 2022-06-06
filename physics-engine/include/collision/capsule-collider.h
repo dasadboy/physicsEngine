@@ -5,12 +5,11 @@
 namespace physics
 {
 
-class CapsuleCollider : Collider
+class CapsuleCollider : public Collider
 {
 private:
     // capsule where line is defined from m_position - m_halfVector to m_position + m_halfVector relative to transform
     vector3f m_halfVector;
-    vector3f m_position;
     float m_radius;
 
 public:

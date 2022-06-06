@@ -4,10 +4,9 @@
 
 namespace physics
 {
-class SphereCollider : Collider
+class SphereCollider : public Collider
 {
 private:
-    vector3f m_position;
     float m_radius;
 
 public:

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "capsule-collider.h"
 #include "sphere-collider.h"
+#include "capsule-collider.h"
 #include "plane-collider.h"
 
 namespace physics
