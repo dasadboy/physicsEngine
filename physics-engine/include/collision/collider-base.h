@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common/basic-data-types.h"
+#include "collision/AABB.h"
 
 namespace physics {
 

@@ -10,90 +10,90 @@ namespace physics
     {
     public:
         
-        float m_w;
-        vector3f m_v;
+        float w;
+        vector3f v;
 
         Quaternion(float w = 1, const vector3f& v = {0}) :
-        m_w(w),
-        m_v(v)
+        w(w),
+        v(v)
         {}
 
         inline bool isUnitary() const
         {
-            return abs(1 - m_w * m_w + m_v.dot(m_v)) < MIN_ALLOWANCE;
+            return abs(1 - w * w + v.dot(v)) < MIN_ALLOWANCE;
         }
 
         inline Quaternion operator+(const Quaternion& right) const
         {
             return {
-                m_w + right.m_w,
-                m_v + right.m_v
+                w + right.w,
+                v + right.v
             };
         }
 
         inline Quaternion& operator+=(const Quaternion& right)
         {
-            m_w += right.m_w;
-            m_v += right.m_v;
+            w += right.w;
+            v += right.v;
             return *this;
         }
 
         inline Quaternion operator-(const Quaternion& right) const
         {
             return {
-                m_w - right.m_w,
-                m_v - right.m_v
+                w - right.w,
+                v - right.v
             };
         }
 
         inline Quaternion& operator-=(const Quaternion& right)
         {
-            m_w -= right.m_w;
-            m_v -= right.m_v;
+            w -= right.w;
+            v -= right.v;
             return *this;
         }
 
         inline Quaternion operator*(const Quaternion& right) const
         {
             return {
-                m_w * right.m_w - m_v.dot(right.m_v),
-                m_v.cross(right.m_v) + m_v * right.m_w + right.m_v * m_w
+                w * right.w - v.dot(right.v),
+                v.cross(right.v) + v * right.w + right.v * w
             };
         }
 
         inline Quaternion operator*(const float right) const
         {
             return {
-                m_w * right,
-                m_v * right
+                w * right,
+                v * right
             };
         }
 
         inline Quaternion operator*=(const float right)
         {
-            m_w *= right;
-            m_v *= right;
+            w *= right;
+            v *= right;
             return *this;
         }
 
         inline Quaternion operator/(const float right) const
         {
             return {
-                m_w / right,
-                m_v / right
+                w / right,
+                v / right
             };
         }
 
         inline Quaternion operator/=(const float right)
         {
-            m_w /= right;
-            m_v /= right;
+            w /= right;
+            v /= right;
             return *this;
         }
 
         inline float dot(const Quaternion& q) const
         {
-            return m_v.dot(q.m_v) + m_w * q.m_w;
+            return v.dot(q.v) + w * q.w;
         }   
     }; // class Quaternion
 

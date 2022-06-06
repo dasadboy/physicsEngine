@@ -29,7 +29,7 @@ namespace physics
         inline vector3f rotate(const vector3f& v) const
         {
             m_assert(rotation.isUnitary(), "Quaternion is not unitary.");
-            return rotation.m_v * (rotation.m_w * rotation.m_w - rotation.m_v.dot(rotation.m_v)) + rotation.m_v * 2 * (rotation.m_v.dot(v)) + rotation.m_v.cross(v) * rotation.m_w * 2;
+            return rotation.v * (rotation.w * rotation.w - rotation.v.dot(rotation.v)) + rotation.v * 2 * (rotation.v.dot(v)) + rotation.v.cross(v) * rotation.w * 2;
         }
     };
     
