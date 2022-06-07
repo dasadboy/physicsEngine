@@ -15,6 +15,10 @@ struct vector3
     T y;
     T z;
 
+    static const vector3f unit_x (1, 0, 0);
+    static const vector3f unit_y (0, 1, 0);
+    static const vector3f unit_z (0, 0, 1);
+
     vector3() :
     x(0),
     y(0),
