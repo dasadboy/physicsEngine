@@ -15,10 +15,6 @@ struct vector3
     T y;
     T z;
 
-    static const vector3f unit_x (1, 0, 0);
-    static const vector3f unit_y (0, 1, 0);
-    static const vector3f unit_z (0, 0, 1);
-
     vector3() :
     x(0),
     y(0),
@@ -129,9 +125,19 @@ struct vector3
     {
         return std::sqrt(dot(*this));
     }
+
+    static inline vector3<T> min(vector3<T> l, vector3<T> r)
+    {
+        return {min(l.x, r.x), min(l.y, r.y), min(l.z, r.z)};
+    }
+
 }; // class vector3
 
 using vector3f = vector3<float>;
 using vector3i = vector3<int>;
+
+static const vector3<float> unit_x (1, 0, 0);
+static const vector3<float> unit_y (0, 1, 0);
+static const vector3<float> unit_z (0, 0, 1);
 
 } // namespace physics
