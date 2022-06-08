@@ -17,13 +17,18 @@ public:
 
     inline const vector3f furthestPoint(const vector3f& dir) const override
     {
-        m_assert(dir.getMagnitude() == 1, "dir is not normalized");
+        m_assert(std::abs(dir.getMagnitude() - 1) < MIN_ALLOWANCE, "dir is not normalized");
         return m_position + dir * m_radius;
     }
 
     inline float getRadius() const
     {
         return m_radius;
+    }
+
+    inline void updateAABB(const Transform& t) override
+    {
+        aabb.resize(getAbsolutePosition(m_position), m_radius);
     }
 
 }; // class SphereCollider

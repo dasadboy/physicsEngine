@@ -17,6 +17,8 @@ protected:
     vector3f m_position;
     ColliderType m_type;
 
+    AABB aabb;
+
 public:
     Collider(const ColliderType type, const vector3f& position = {0, 0, 0}) :
     m_type(type),
@@ -36,6 +38,9 @@ public:
     {
         return t.rotate( m_position ) + t.pos;
     }
+
+    virtual inline void updateAABB(const Transform& t) = 0;
+
 }; // class Collider
 
 } // namespace physics

@@ -17,7 +17,7 @@ public:
     m_distance(distance)
     {}
 
-    PlaneCollider(vector3f& normal, float distance) :
+    PlaneCollider(const vector3f& normal = {1, 0, 0}, float distance = 0) :
     Collider(ColliderType::PLANE),
     m_normal(normal),
     m_distance(distance)
@@ -45,7 +45,7 @@ public:
     {
         m_assert(true, "PlaneCollider has no relative position. Position is defined by distance and \
         vector normal to plane");
-        return {0};
+        return m_position;
     } 
 
     inline const vector3f getAbsolutePosition(const Transform& t) const
@@ -69,6 +69,8 @@ public:
     {
         return point.dot(m_normal) + m_distance;
     }
+
+    inline void updateAABB(const Transform& t) override {}
 
 }; // class PlaneCollider
 
