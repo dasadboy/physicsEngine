@@ -54,6 +54,14 @@ public:
         return m_radius;
     }
 
+    inline void updateAABB(const Transform& t) override
+    {
+        vector3f extent(m_radius, m_radius, m_radius);
+        vector3f pos = getAbsolutePosition(t);
+        vector3f v = t.rotate(m_halfVector);
+        aabb.resize(vector3f::accumulate_min(pos + v, pos - v), vector3f::accumulate_max(pos + v, pos - v));
+    }
+
 }; // class CapsuleCollider
 
 } // namespace physics

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common/basic-data-types.h"
+#include "collision/AABB.h"
 
 namespace physics {
 
@@ -16,6 +16,8 @@ class Collider
 protected:
     vector3f m_position;
     ColliderType m_type;
+
+    AABB aabb;
 
 public:
     Collider(const ColliderType type, const vector3f& position = {0, 0, 0}) :
@@ -36,6 +38,9 @@ public:
     {
         return t.rotate( m_position ) + t.pos;
     }
+
+    virtual inline void updateAABB(const Transform& t) = 0;
+
 }; // class Collider
 
 } // namespace physics
