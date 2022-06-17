@@ -28,6 +28,18 @@ public:
         m_collider = collider;
     }
 
+    void detachCollider()
+    {
+        m_collider = nullptr;
+    }
+
+    bool isColliderAttached()
+    {
+        return m_collider != nullptr;
+    }
+
+    Collider* getCollider() { return m_collider; }
+
     void setTransform(const Transform& transform)
     {
         m_transform = transform;
