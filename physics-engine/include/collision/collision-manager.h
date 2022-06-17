@@ -4,8 +4,114 @@
 
 namespace physics
 {
+    enum Axis {
+        X,
+        Y,
+        Z
+    };
+    
+    template < Axis A >
+    struct CompareObjectAABBPosition
+    {
+        inline bool operator()(CollisionObject* a, CollisionObject* b);
+    };
+
+    template<> bool CompareObjectAABBPosition< Axis::X >::operator()(CollisionObject* a, CollisionObject* b)
+    {
+        m_assert(a->isColliderAttached() && b->isColliderAttached(), "One or more arguments missing attached collider.");
+        AABB& aabba = a->getCollider()->aabb;
+        AABB& aabbb = b->getCollider()->aabb;
+        return aabba.m_min.x < aabbb.m_min.x;
+    }
+
+    template<> bool CompareObjectAABBPosition< Axis::Y >::operator()(CollisionObject* a, CollisionObject* b)
+    {
+        m_assert(a->isColliderAttached() && b->isColliderAttached(), "One or more arguments missing attached collider.");
+        AABB& aabba = a->getCollider()->aabb;
+        AABB& aabbb = b->getCollider()->aabb;
+        return aabba.m_min.y < aabbb.m_min.y;
+    }
+
+    template<> bool CompareObjectAABBPosition< Axis::Z >::operator()(CollisionObject* a, CollisionObject* b)
+    {
+        m_assert(a->isColliderAttached() && b->isColliderAttached(), "One or more arguments missing attached collider.");
+        AABB& aabba = a->getCollider()->aabb;
+        AABB& aabbb = b->getCollider()->aabb;
+        return aabba.m_min.z < aabbb.m_min.z;
+    }
+
     class CollisionManager
     {
+    private:
+
+        std::vector<CollisionObject*> x;
+        std::vector<CollisionObject*> y;
+        std::vector<CollisionObject*> z;
+
+        std::unordered_set<CollisionObject*> objectsToRemove;
+        size_t numObjectsRemoved;
+    
+    public:
+        CollisionManager() :
+        numObjectsRemoved(0)
+        {}
+
+        inline void addCollisionObject(CollisionObject* obj)
+        {
+            x.push_back(obj);
+            std::sort(x.begin(), x.end(), CompareObjectAABBPosition< Axis::X >());
+            y.push_back(obj);
+            std::sort(y.begin(), y.end(), CompareObjectAABBPosition< Axis::Y >());
+            z.push_back(obj);
+            std::sort(z.begin(), z.end(), CompareObjectAABBPosition< Axis::Z >());
+        }
+
+        inline void removeCollisionObject(std::initializer_list<CollisionObject*> objs)
+        {
+            for (auto obj : objs)
+            {
+                objectsToRemove.insert(obj);
+                ++numObjectsRemoved;
+            }
+        }
+
+        inline void batchRemove()
+        {
+            auto iter = x.begin();
+            auto end = x.end();
+            for (; iter != end; ++iter)
+            {
+                if (objectsToRemove.count(*iter))
+                    x.erase(iter);
+            }
+
+            iter = y.begin();
+            end = y.end();
+
+            for (; iter != end; ++iter)
+            {
+                if (objectsToRemove.count(*iter))
+                    y.erase(iter);
+            }
+
+            iter = z.begin();
+            end = z.end();
+            for (; iter != end; ++iter)
+            {
+                if (objectsToRemove.count(*iter))
+                    z.erase(iter);
+            }
+        }
+
+        inline void update()
+        {
+            batchRemove();
+
+            sort(x.begin(), x.end(), CompareObjectAABBPosition<Axis::X>());
+            sort(y.begin(), y.end(), CompareObjectAABBPosition<Axis::Y>());
+            sort(z.begin(), z.end(), CompareObjectAABBPosition<Axis::Z>());
+        }
+
         // sphere sphere
         static inline CollisionVector getCollision(
             const Transform* transform1, 
