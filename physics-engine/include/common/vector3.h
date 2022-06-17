@@ -15,6 +15,10 @@ struct vector3
     T y;
     T z;
 
+    static const vector3<T> unit_x;
+    static const vector3<T> unit_y;
+    static const vector3<T> unit_z;
+
     vector3() :
     x(0),
     y(0),
@@ -179,8 +183,12 @@ struct vector3
 using vector3f = vector3<float>;
 using vector3i = vector3<int>;
 
-static const vector3<float> unit_x (1, 0, 0);
-static const vector3<float> unit_y (0, 1, 0);
-static const vector3<float> unit_z (0, 0, 1);
+const vector3<float> vector3<float>::unit_x (1, 0, 0);
+const vector3<float> vector3<float>::unit_y (0, 1, 0);
+const vector3<float> vector3<float>::unit_z (0, 0, 1);
+
+const vector3<int> vector3<int>::unit_x (1, 0, 0);
+const vector3<int> vector3<int>::unit_y (0, 1, 0);
+const vector3<int> vector3<int>::unit_z (0, 0, 1);
 
 } // namespace physics
