@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common/math-defines.h"
+#include "common/common.h"
 
 namespace physics {
 
@@ -32,6 +32,20 @@ struct vector3
     y(y),
     z(z)
     {}
+
+    inline T operator[](size_t idx)
+    {
+        assert(idx < 3);
+        switch(idx) {
+            case 0:
+                return x;
+            case 1:
+                return y;
+            case 2:
+                return z;
+        }
+        return INFINITY;
+    }
 
     inline vector3<T> operator+(const vector3<T>& right) const
     {
