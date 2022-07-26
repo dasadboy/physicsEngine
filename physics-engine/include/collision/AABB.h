@@ -73,5 +73,22 @@ namespace physics
 
             return diffX * diffX + diffY * diffY + diffZ * diffZ;
         }
+
+        inline AABB merge(const AABB& other)
+        {
+            vector3f newMin = vector3f::accumulate_min(other.m_min, m_min);
+            vector3f newMax = vector3f::accumulate_min(other.m_max, m_max);
+
+            return {newMin, newMax}; 
+        }
+
+        inline AABB mergeInPlace(const AABB& other)
+        {
+            vector3f newMin = vector3f::accumulate_min(other.m_min, m_min);
+            vector3f newMax = vector3f::accumulate_min(other.m_max, m_max);
+
+            m_min = newMin;
+            m_max = newMax;
+        }
     };
 }
