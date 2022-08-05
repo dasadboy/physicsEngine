@@ -33,7 +33,7 @@ public:
 
     CapsuleCollider(const vector3f& a, const vector3f& b, float radius, const vector3f& position = {0, 0, 0}) :
     Collider(ColliderType::CAPSULE, position),
-    m_halfVector((b - a)/2),
+    m_halfVector((b - a)/2.f),
     m_radius(radius)
     {}
 

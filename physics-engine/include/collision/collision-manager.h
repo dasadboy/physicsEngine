@@ -1,6 +1,6 @@
 #pragma once
 
-#include "collision/collision-object.h"
+#include "collision/broadphase.h"
 
 namespace physics
 {

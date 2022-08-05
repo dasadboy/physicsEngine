@@ -7,4 +7,4 @@ include_directories(physics-engine/include)
 
 add_subdirectory(dependencies/google-test)
 add_subdirectory(physics-engine)
-add_subdirectory(physics-engine-tests)
+# add_subdirectory(physics-engine-tests)

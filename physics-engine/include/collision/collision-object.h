@@ -1,8 +1,8 @@
 #pragma once
 
-#include "sphere-collider.h"
-#include "capsule-collider.h"
-#include "plane-collider.h"
+#include "collision/sphere-collider.h"
+#include "collision/capsule-collider.h"
+#include "collision/plane-collider.h"
 
 namespace physics
 {
@@ -13,14 +13,21 @@ protected:
     ColliderType m_type;
     Transform m_transform;
     Collider* m_collider;
+    size_t m_id;
 
     using callbackFunc_t = std::function<void(CollisionVector, float)>;
 
 public:
-    CollisionObject(ColliderType type) :
+    CollisionObject(ColliderType type, size_t id) :
     m_type(type),
-    m_collider(nullptr)
+    m_collider(nullptr),
+    m_id(id)
     {}
+
+    size_t getid() const
+    {
+        return m_id;
+    }
 
     void attachCollider(Collider* collider)
     {   
@@ -53,6 +60,16 @@ public:
     void rotate(const Quaternion& q)
     {
         m_transform.rotateSelf(q);
+    }
+
+    void updateAABB()
+    {
+        m_collider->updateAABB(m_transform);
+    }
+
+    const AABB& getAABB() const
+    {
+        return m_collider->aabb;
     }
 
     ~CollisionObject()

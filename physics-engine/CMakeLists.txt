@@ -6,7 +6,9 @@ include_directories(src)
 
 # .CPP FILES
 set(SRC_FILE_NAMES 
-    main.cpp)
+    main.cpp
+    collision/broadphase.cpp
+    common/common.cpp)
 
 list(TRANSFORM SRC_FILE_NAMES PREPEND "src/" OUTPUT_VARIABLE SRC_FILES)
 

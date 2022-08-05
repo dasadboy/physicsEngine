@@ -37,7 +37,14 @@ struct vector3
     z(z)
     {}
 
-    inline T operator[](size_t idx)
+    template<typename To>
+        requires arithmeticType<To>
+    operator vector3<To>()
+    {
+        return {(To) x, (To) y, (To) z};
+    }
+
+    inline T operator[](int idx) const
     {
         assert(idx < 3);
         switch(idx) {
@@ -48,6 +55,7 @@ struct vector3
             case 2:
                 return z;
         }
+        // should never come here
         return INFINITY;
     }
 
@@ -105,6 +113,11 @@ struct vector3
     {
         x /= right, y /= right, z /= right;
         return *this;
+    }
+
+    inline vector3<T> operator/(vector3<T> right)
+    {
+        return {x/right.x, y/right.y, z/right.z};
     }
 
     inline T dot(const vector3<T> right) const
@@ -182,13 +195,14 @@ struct vector3
 
 using vector3f = vector3<float>;
 using vector3i = vector3<int>;
+using vector3s = vector3<size_t>;
+using vector3ll = vector3<long long>;
+using vector3d = vector3<double>;
 
-const vector3<float> vector3<float>::unit_x (1, 0, 0);
-const vector3<float> vector3<float>::unit_y (0, 1, 0);
-const vector3<float> vector3<float>::unit_z (0, 0, 1);
+template<typename T> const vector3<T> vector3<T>::unit_x (1, 0, 0);
+template<typename T> const vector3<T> vector3<T>::unit_y (0, 1, 0);
+template<typename T> const vector3<T> vector3<T>::unit_z (0, 0, 1);
 
-const vector3<int> vector3<int>::unit_x (1, 0, 0);
-const vector3<int> vector3<int>::unit_y (0, 1, 0);
-const vector3<int> vector3<int>::unit_z (0, 0, 1);
+
 
 } // namespace physics
