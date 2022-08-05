@@ -30,7 +30,8 @@ namespace physics
         sap0(sapvector.begin(), sapvector.end(), sapvector.size(), 0);
     }
 
-    void BroadphaseMbpRegion::sap0(std::vector<BroadphaseSimplex*>::iterator begin, std::vector<BroadphaseSimplex*>::iterator end, size_t sz, int consecutiveNonSplits)
+    void BroadphaseMbpRegion::sap0(std::vector<BroadphaseSimplex*>::iterator begin, 
+    std::vector<BroadphaseSimplex*>::iterator end, size_t sz, int consecutiveNonSplits)
     {
         if (end - begin <=2 || consecutiveNonSplits == 3)
         {
@@ -76,7 +77,8 @@ namespace physics
         }
     }
 
-    void BroadphaseMbpRegion::sap1(std::vector<BroadphaseSimplex*>::iterator begin, std::vector<BroadphaseSimplex*>::iterator end, size_t sz, int consecutiveNonSplits)
+    void BroadphaseMbpRegion::sap1(std::vector<BroadphaseSimplex*>::iterator begin, 
+    std::vector<BroadphaseSimplex*>::iterator end, size_t sz, int consecutiveNonSplits)
     {
         if (end - begin <=2 || consecutiveNonSplits == 3)
         {
@@ -122,7 +124,8 @@ namespace physics
         }
     }
 
-    void BroadphaseMbpRegion::sap2(std::vector<BroadphaseSimplex*>::iterator begin, std::vector<BroadphaseSimplex*>::iterator end, size_t sz, int consecutiveNonSplits)
+    void BroadphaseMbpRegion::sap2(std::vector<BroadphaseSimplex*>::iterator begin, 
+    std::vector<BroadphaseSimplex*>::iterator end, size_t sz, int consecutiveNonSplits)
     {
         if (end - begin <=2 || consecutiveNonSplits == 3)
         {

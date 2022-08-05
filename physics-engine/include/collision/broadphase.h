@@ -54,11 +54,14 @@ namespace physics
 
         void generatePairs();
 
-        void sap0(std::vector<BroadphaseSimplex*>::iterator begin, std::vector<BroadphaseSimplex*>::iterator end, size_t sz, int consecutiveNonSplits);
+        void sap0(std::vector<BroadphaseSimplex*>::iterator begin, 
+        std::vector<BroadphaseSimplex*>::iterator end, size_t sz, int consecutiveNonSplits);
 
-        void sap1(std::vector<BroadphaseSimplex*>::iterator begin, std::vector<BroadphaseSimplex*>::iterator end, size_t sz, int consecutiveNonSplits);
+        void sap1(std::vector<BroadphaseSimplex*>::iterator begin, 
+        std::vector<BroadphaseSimplex*>::iterator end, size_t sz, int consecutiveNonSplits);
 
-        void sap2(std::vector<BroadphaseSimplex*>::iterator begin, std::vector<BroadphaseSimplex*>::iterator end, size_t sz, int consecutiveNonSplits);
+        void sap2(std::vector<BroadphaseSimplex*>::iterator begin, 
+        std::vector<BroadphaseSimplex*>::iterator end, size_t sz, int consecutiveNonSplits);
 
         #undef DEFAULTLOC
     };
@@ -71,7 +74,7 @@ namespace physics
         vector3f m_cellsize;
         vector3f m_updatedRegions;
 
-    private:
+    public:
 
         BroadphaseMbp(const vector3f& cellsize) :
         m_cellsize(cellsize)
@@ -86,7 +89,8 @@ namespace physics
 
         const BroadphaseMbpRegion& getRegionFromPosition(vector3f& pos)
         {
-            vector3ll region = pos/m_cellsize;
+            vector3ll region = {static_cast<long long int>(pos.x/m_cellsize.x), 
+            static_cast<long long int>(pos.y/m_cellsize.y), static_cast<long long int>(pos.z/m_cellsize.z)};
             return m_regions[region.x][region.y][region.z];
         }
 

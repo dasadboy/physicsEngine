@@ -115,10 +115,10 @@ struct vector3
         return *this;
     }
 
-    inline vector3<T> operator/(vector3<T> right)
-    {
-        return {x/right.x, y/right.y, z/right.z};
-    }
+    // inline vector3<T> operator/(vector3<T> right)
+    // {
+    //     return {x/right.x, y/right.y, z/right.z};
+    // }
 
     inline T dot(const vector3<T> right) const
     {

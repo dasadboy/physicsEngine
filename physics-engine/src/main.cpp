@@ -6,8 +6,8 @@ int main()
     physics::CapsuleCollider cap;
     physics::SphereCollider sph;
     physics::PlaneCollider pln;
-
-    physics::BroadphaseMbpRegion BMBPReg;
+    
+    physics::BroadphaseMbp bp ({30, 30, 30});
 
     return 0;
 }
