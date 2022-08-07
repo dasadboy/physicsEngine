@@ -4,3 +4,4 @@
 #include "common/transform.h"
 #include "common/collision-vector.h"
 #include "common/quaternion.h"
+#include "common/handles.h"

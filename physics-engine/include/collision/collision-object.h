@@ -13,7 +13,7 @@ protected:
     ColliderType m_type;
     Transform m_transform;
     Collider* m_collider;
-    size_t m_id;
+    ObjectHandle m_id;
 
     using callbackFunc_t = std::function<void(CollisionVector, float)>;
 
@@ -24,7 +24,7 @@ public:
     m_id(id)
     {}
 
-    size_t getid() const
+    ObjectHandle getid() const
     {
         return m_id;
     }

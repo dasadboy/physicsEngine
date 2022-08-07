@@ -2,9 +2,11 @@
 
 namespace physics
 {
+    const long long BroadphaseHash::mod = 1ll << 32;
+
     #define DEFAULTLOC UINT_MAX
 
-    void BroadphaseMbpRegion::addObject(BroadphaseSimplex* simp)
+    void BroadphaseMbpRegion::addSimplex(BroadphaseSimplex* simp)
     {
         if (m_objLocations[simp->id] == DEFAULTLOC)
             return;
@@ -13,7 +15,7 @@ namespace physics
         m_objects.push_back(simp);
     }
 
-    void BroadphaseMbpRegion::removeObject(BroadphaseSimplex* simp)
+    void BroadphaseMbpRegion::removeSimplex(BroadphaseSimplex* simp)
     {
         size_t id = simp->id;
         size_t pos = m_objLocations[id];
@@ -171,21 +173,13 @@ namespace physics
         }
     }
 
+    #undef DEFAULTLOC
 
     // BroadphaseMbp
 
-    const bool BroadphaseMbp::count(vector3ll& idx) const
+    const bool BroadphaseMbp::count(vector3i& idx) const
     {
-        bool r1 = m_regions.count(idx.x);
-        if (!r1) 
-            return false;
-        bool r2 = m_regions.find(idx.x)->second.count(idx.y);
-        if (!r2) 
-            return false;
-        bool r3 = m_regions.find(idx.x)->second.find(idx.y)->second.count(idx.z);
-        if (!r3) 
-            return false;
-        return true;
+        return m_regions.count(idx);
     }
 
     void BroadphaseMbp::addObject(CollisionObject* obj)
@@ -193,17 +187,41 @@ namespace physics
         const AABB& aabb = obj->getAABB();
         const vector3f &rmin = aabb.m_min, &rmax = aabb.m_max;
         BroadphaseSimplex* simp = new BroadphaseSimplex (obj->getid(), aabb);
+        idToSimplex[obj->getid()] = simp;
         for (int i = rmin.x, ie = rmax.x; i <= ie; ++i)
         {
-            for (int j = rmin.y, je = rmax.y; j <= je; ++j)
+            for (int j = rmin.y, je = rmax.y; j < je; ++j)
             {
-                for (int k = rmin.z, ke = rmax.z; k <= ke; ++k)
-                {
-                    m_regions[i][j][k].addObject(simp);
-                }
+                for (int k = rmin.z, ke = rmax.z; k < ke; ++k)
+                    m_regions[{i, j, k}].addSimplex(simp);
             }
         }
     }
 
-    #undef DEFAULTLOC
+    void BroadphaseMbp::removeObject(CollisionObject* obj)
+    {
+        BroadphaseSimplex* simp = idToSimplex[obj->getid()];
+        idToSimplex[obj->getid()] = nullptr;
+
+        vector3f rmin = simp->aabb.m_min, rmax = simp->aabb.m_max;
+
+        for (int i = rmin.x, ie = rmax.x; i <= ie; ++i)
+        {
+            for (int j = rmin.y, je = rmax.y; j < je; ++j)
+            {
+                for (int k = rmin.z, ke = rmax.z; k < ke; ++k)
+                    m_regions[{i, j, k}].addSimplex(simp);
+            }
+        }
+
+        delete simp;
+    }
+
+    BroadphaseMbp::~BroadphaseMbp()
+    {
+        for (BroadphaseSimplex* simp : idToSimplex)
+        {
+            delete simp;
+        }
+    }
 }
