@@ -18,6 +18,15 @@ namespace physics
         {}
     };
 
+
+    class BroadphasePairs
+    {
+    public:
+        const size_t objA;
+        const size_t objB;
+    };
+
+
     template< unsigned int dim >
     class BroadphaseSimplexCmp
     {
@@ -28,12 +37,6 @@ namespace physics
         }
     };
 
-    class BroadphasePairs
-    {
-    public:
-        const size_t objA;
-        const size_t objB;
-    };
 
     class BroadphaseMbpRegion
     {
@@ -61,16 +64,20 @@ namespace physics
         void generatePairs();
 
         void sap0(std::vector<BroadphaseSimplex*>::iterator begin, 
-            std::vector<BroadphaseSimplex*>::iterator end, size_t sz, int consecutiveNonSplits);
+            std::vector<BroadphaseSimplex*>::iterator end, 
+            size_t sz, int consecutiveNonSplits);
 
         void sap1(std::vector<BroadphaseSimplex*>::iterator begin, 
-            std::vector<BroadphaseSimplex*>::iterator end, size_t sz, int consecutiveNonSplits);
+            std::vector<BroadphaseSimplex*>::iterator end, 
+            size_t sz, int consecutiveNonSplits);
 
         void sap2(std::vector<BroadphaseSimplex*>::iterator begin, 
-            std::vector<BroadphaseSimplex*>::iterator end, size_t sz, int consecutiveNonSplits);
+            std::vector<BroadphaseSimplex*>::iterator end, 
+            size_t sz, int consecutiveNonSplits);
 
         #undef DEFAULTLOC
     };
+
 
     class BroadphaseHash 
     {
@@ -82,6 +89,7 @@ namespace physics
             return ((key.x % mod)* 2467 + (key.y % mod) * 71167 + (key.z % mod) * 1429) % mod;
         }
     };
+
 
     class BroadphaseMbp
     {
