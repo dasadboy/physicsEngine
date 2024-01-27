@@ -9,107 +9,59 @@ namespace physics
         Y,
         Z
     };
-    
-    template < Axis A >
-    struct CompareObjectAABBPosition
-    {
-        inline bool operator()(CollisionObject* a, CollisionObject* b);
-    };
-
-    template<> bool CompareObjectAABBPosition< Axis::X >::operator()(CollisionObject* a, CollisionObject* b)
-    {
-        m_assert(a->isColliderAttached() && b->isColliderAttached(), "One or more arguments missing attached collider.");
-        AABB& aabba = a->getCollider()->aabb;
-        AABB& aabbb = b->getCollider()->aabb;
-        return aabba.m_min.x < aabbb.m_min.x;
-    }
-
-    template<> bool CompareObjectAABBPosition< Axis::Y >::operator()(CollisionObject* a, CollisionObject* b)
-    {
-        m_assert(a->isColliderAttached() && b->isColliderAttached(), "One or more arguments missing attached collider.");
-        AABB& aabba = a->getCollider()->aabb;
-        AABB& aabbb = b->getCollider()->aabb;
-        return aabba.m_min.y < aabbb.m_min.y;
-    }
-
-    template<> bool CompareObjectAABBPosition< Axis::Z >::operator()(CollisionObject* a, CollisionObject* b)
-    {
-        m_assert(a->isColliderAttached() && b->isColliderAttached(), "One or more arguments missing attached collider.");
-        AABB& aabba = a->getCollider()->aabb;
-        AABB& aabbb = b->getCollider()->aabb;
-        return aabba.m_min.z < aabbb.m_min.z;
-    }
 
     class CollisionManager
     {
     private:
 
-        std::vector<CollisionObject*> x;
-        std::vector<CollisionObject*> y;
-        std::vector<CollisionObject*> z;
+        std::array<CollisionObject*, MAX_OBJECTS> m_objects;
+        std::array<ObjectHandle, MAX_OBJECTS> availableHandles;
+        unsigned int m_numObjects;
 
-        std::unordered_set<CollisionObject*> objectsToRemove;
-        size_t numObjectsRemoved;
+        BroadphaseMbp m_mbp;
     
     public:
-        CollisionManager() :
-        numObjectsRemoved(0)
-        {}
-
-        inline void addCollisionObject(CollisionObject* obj)
+        CollisionManager(const vector3f& cellsize) :
+        m_numObjects(0),
+        m_mbp(cellsize)
         {
-            x.push_back(obj);
-            std::sort(x.begin(), x.end(), CompareObjectAABBPosition< Axis::X >());
-            y.push_back(obj);
-            std::sort(y.begin(), y.end(), CompareObjectAABBPosition< Axis::Y >());
-            z.push_back(obj);
-            std::sort(z.begin(), z.end(), CompareObjectAABBPosition< Axis::Z >());
+            for (ObjectHandle n = MAX_OBJECTS - 1; n >= 0; --n)
+                availableHandles[n] = n;
         }
 
-        inline void removeCollisionObject(std::initializer_list<CollisionObject*> objs)
+        inline void addCollisionObjects(std::initializer_list<CollisionObject*> objs)
         {
-            for (auto obj : objs)
+            for (CollisionObject *const *iter = objs.begin(), *const *end = std::min(objs.end(), iter + MAX_OBJECTS - m_numObjects); 
+                iter != end; ++iter)
             {
-                objectsToRemove.insert(obj);
-                ++numObjectsRemoved;
+                CollisionObject* obj = *iter;
+                ObjectHandle id = availableHandles[m_numObjects++];
+                obj->setid(id);
+                m_objects[id] = obj;
             }
         }
 
-        inline void batchRemove()
+        inline void removeCollisionObjects(std::initializer_list<CollisionObject*> objs)
         {
-            auto iter = x.begin();
-            auto end = x.end();
-            for (; iter != end; ++iter)
+            std::vector<ObjectHandle> handles;
+            for (CollisionObject *const *iter = objs.begin(), 
+                *const *end = std::min(objs.end(), iter + MAX_OBJECTS - m_numObjects); 
+                iter != end; ++iter)
             {
-                if (objectsToRemove.count(*iter))
-                    x.erase(iter);
+                CollisionObject* obj = *iter;
+                availableHandles[--m_numObjects] = obj->getid();
+                m_objects[obj->getid()] = nullptr;
+                handles.push_back(obj->getid());
             }
-
-            iter = y.begin();
-            end = y.end();
-
-            for (; iter != end; ++iter)
-            {
-                if (objectsToRemove.count(*iter))
-                    y.erase(iter);
-            }
-
-            iter = z.begin();
-            end = z.end();
-            for (; iter != end; ++iter)
-            {
-                if (objectsToRemove.count(*iter))
-                    z.erase(iter);
-            }
+            m_mbp.queueForRemoval(handles);
         }
 
         inline void update()
         {
-            batchRemove();
+            m_mbp.batchRemove();
+            m_mbp.batchAdd();
 
-            sort(x.begin(), x.end(), CompareObjectAABBPosition<Axis::X>());
-            sort(y.begin(), y.end(), CompareObjectAABBPosition<Axis::Y>());
-            sort(z.begin(), z.end(), CompareObjectAABBPosition<Axis::Z>());
+            // m_mbp.
         }
 
         // sphere sphere

@@ -6,6 +6,7 @@
 #include <vector>
 #include <iostream>
 #include <unordered_set>
+#include <iterator>
 
 // from https://stackoverflow.com/questions/3692954/add-custom-messages-in-assert
 #ifndef NDEBUG

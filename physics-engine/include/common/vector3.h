@@ -44,6 +44,11 @@ struct vector3
         return {(To) x, (To) y, (To) z};
     }
 
+    inline bool operator==(const vector3<T> right) const
+    {
+        return x == right.x && y == right.y && z == right.z;
+    }
+
     inline T operator[](int idx) const
     {
         assert(idx < 3);

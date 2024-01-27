@@ -3,11 +3,13 @@
 
 int main()
 {
-    physics::CapsuleCollider cap;
-    physics::SphereCollider sph;
-    physics::PlaneCollider pln;
-    
-    physics::BroadphaseMbp bp ({30, 30, 30});
+    physics::CollisionManager cm (200);
+
+    physics::CollisionObject co (physics::ColliderType::SPHERE);
+
+    physics::CollisionObject* co2 = new physics::CollisionObject(physics::ColliderType::SPHERE);
+
+    cm.addCollisionObjects({co2});
 
     return 0;
 }

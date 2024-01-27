@@ -7,6 +7,8 @@
 namespace physics
 {
 
+class CollisionManager;
+
 class CollisionObject
 {
 protected:
@@ -17,11 +19,18 @@ protected:
 
     using callbackFunc_t = std::function<void(CollisionVector, float)>;
 
+    void setid(ObjectHandle id) 
+    {
+        m_id = id;
+    }
+
+    friend class CollisionManager;
+
 public:
-    CollisionObject(ColliderType type, size_t id) :
+
+    CollisionObject(ColliderType type) :
     m_type(type),
-    m_collider(nullptr),
-    m_id(id)
+    m_collider(nullptr)
     {}
 
     ObjectHandle getid() const

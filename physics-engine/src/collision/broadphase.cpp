@@ -15,13 +15,12 @@ namespace physics
         m_objects.push_back(simp);
     }
 
-    void BroadphaseMbpRegion::removeSimplex(BroadphaseSimplex* simp)
+    void BroadphaseMbpRegion::removeSimplex(ObjectHandle handle)
     {
-        size_t id = simp->id;
-        size_t pos = m_objLocations[id];
+        size_t pos = m_objLocations[handle];
         size_t rid = m_objects.back()->id;
         m_objects[pos] = m_objects.back();
-        m_objLocations[id] = DEFAULTLOC;
+        m_objLocations[handle] = DEFAULTLOC;
         m_objLocations[rid] = pos;
         m_objects.pop_back();
     }
@@ -35,15 +34,16 @@ namespace physics
     void BroadphaseMbpRegion::sap0(std::vector<BroadphaseSimplex*>::iterator begin, 
     std::vector<BroadphaseSimplex*>::iterator end, size_t sz, int consecutiveNonSplits)
     {
-        if (end - begin <=2 || consecutiveNonSplits == 3)
+        if (end - begin <= 1 || consecutiveNonSplits == 3)
         {
             for (auto it1 = begin; it1 != end; ++it1)
             {
                 for (auto it2 = it1 + 1; it2 != end; ++it2)
                 {
-                    m_pairs.emplace_back((*it1)->id, (*it2)->id);
+                    m_pairs[m_numPairs++] = new BroadphasePairs((*it1)->id, (*it2)->id);
                 }
             }
+            return;
         }
 
         std::sort(begin, end, BroadphaseSimplexCmp< 0 >());
@@ -82,15 +82,16 @@ namespace physics
     void BroadphaseMbpRegion::sap1(std::vector<BroadphaseSimplex*>::iterator begin, 
     std::vector<BroadphaseSimplex*>::iterator end, size_t sz, int consecutiveNonSplits)
     {
-        if (end - begin <=2 || consecutiveNonSplits == 3)
+        if (end - begin <= 1 || consecutiveNonSplits == 3)
         {
             for (auto it1 = begin; it1 != end; ++it1)
             {
                 for (auto it2 = it1 + 1; it2 != end; ++it2)
                 {
-                    m_pairs.emplace_back((*it1)->id, (*it2)->id);
+                    m_pairs[m_numPairs++] = new BroadphasePairs((*it1)->id, (*it2)->id);
                 }
             }
+            return;
         }
 
         std::sort(begin, end, BroadphaseSimplexCmp< 1 >());
@@ -129,15 +130,16 @@ namespace physics
     void BroadphaseMbpRegion::sap2(std::vector<BroadphaseSimplex*>::iterator begin, 
     std::vector<BroadphaseSimplex*>::iterator end, size_t sz, int consecutiveNonSplits)
     {
-        if (end - begin <=2 || consecutiveNonSplits == 3)
+        if (end - begin <= 1 || consecutiveNonSplits == 3)
         {
             for (auto it1 = begin; it1 != end; ++it1)
             {
                 for (auto it2 = it1 + 1; it2 != end; ++it2)
                 {
-                    m_pairs.emplace_back((*it1)->id, (*it2)->id);
+                    m_pairs[m_numPairs++] = new BroadphasePairs((*it1)->id, (*it2)->id);
                 }
             }
+            return;
         }
 
         std::sort(begin, end, BroadphaseSimplexCmp< 2 >());
@@ -182,26 +184,29 @@ namespace physics
         return m_regions.count(idx);
     }
 
-    void BroadphaseMbp::addObject(CollisionObject* obj)
+    void BroadphaseMbp::addObject(BroadphaseSimplex* simp)
     {
-        const AABB& aabb = obj->getAABB();
+        const AABB& aabb = simp->aabb;
         const vector3f &rmin = aabb.m_min, &rmax = aabb.m_max;
-        BroadphaseSimplex* simp = new BroadphaseSimplex (obj->getid(), aabb);
-        idToSimplex[obj->getid()] = simp;
+        idToSimplex[simp->id] = simp;
         for (int i = rmin.x, ie = rmax.x; i <= ie; ++i)
         {
             for (int j = rmin.y, je = rmax.y; j < je; ++j)
             {
                 for (int k = rmin.z, ke = rmax.z; k < ke; ++k)
-                    m_regions[{i, j, k}].addSimplex(simp);
+                {
+                    if (m_regions[{i, j, k}])
+                        m_regions[{i, j, k}] = new BroadphaseMbpRegion(m_pairs, m_numPairs);
+                    m_regions[{i, j, k}]->addSimplex(simp);
+                }
             }
         }
     }
 
-    void BroadphaseMbp::removeObject(CollisionObject* obj)
+    void BroadphaseMbp::removeObject(ObjectHandle handle)
     {
-        BroadphaseSimplex* simp = idToSimplex[obj->getid()];
-        idToSimplex[obj->getid()] = nullptr;
+        BroadphaseSimplex* simp = idToSimplex[handle];
+        idToSimplex[handle] = nullptr;
 
         vector3f rmin = simp->aabb.m_min, rmax = simp->aabb.m_max;
 
@@ -210,11 +215,27 @@ namespace physics
             for (int j = rmin.y, je = rmax.y; j < je; ++j)
             {
                 for (int k = rmin.z, ke = rmax.z; k < ke; ++k)
-                    m_regions[{i, j, k}].addSimplex(simp);
+                    m_regions[{i, j, k}]->removeSimplex(handle);
             }
         }
 
         delete simp;
+    }
+
+    void BroadphaseMbp::batchAdd()
+    {
+        while (m_numObjectsToAdd)
+        {
+            addObject(m_objectsToAdd[--m_numObjectsToAdd]);
+        }
+    }
+
+    void BroadphaseMbp::batchRemove()
+    {
+        while (m_numObjectsToRemove)
+        {
+            removeObject(m_objectsToRemove[--m_numObjectsToRemove]);
+        }
     }
 
     BroadphaseMbp::~BroadphaseMbp()
@@ -222,6 +243,11 @@ namespace physics
         for (BroadphaseSimplex* simp : idToSimplex)
         {
             delete simp;
+        }
+
+        while (m_numObjectsToAdd)
+        {
+            delete m_objectsToAdd[--m_numObjectsToAdd];
         }
     }
 }

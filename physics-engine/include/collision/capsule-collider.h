@@ -59,7 +59,7 @@ public:
         vector3f extent(m_radius, m_radius, m_radius);
         vector3f pos = getAbsolutePosition(t);
         vector3f v = t.rotate(m_halfVector);
-        aabb.resize(vector3f::accumulate_min(pos + v, pos - v), vector3f::accumulate_max(pos + v, pos - v));
+        aabb.resize(vector3f::accumulate_min(pos + v, pos - v) - extent, vector3f::accumulate_max(pos + v, pos - v) + extent);
     }
 
 }; // class CapsuleCollider
